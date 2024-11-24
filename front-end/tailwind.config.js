@@ -4,10 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#E83667",
-        primaryDark: "#BB2C51",
-        secondary: "#21D4B9",
-        dark: "#303030",
+        primary: "#DB4444",
       },
       fontFamily: {
         inter: ["Inter", "sans-serif"],
@@ -22,11 +19,6 @@ export default {
           lg: "4rem",
         },
       },
-    },
-  },
-  variants: {
-    extend: {
-      translate: [`group-hover`],
     },
   },
   plugins: [],

@@ -15,6 +15,17 @@
   }
 }
 
-.slow-bounce {
-  animation: slow-bounce 2s infinite ease-in-out;
+@layer components {
+  .search-bar {
+    @apply w-0 group-hover:w-[300px] transition-all duration-300 rounded-full group-hover:border group-hover:border-gray-500 px-3 py-1 focus:outline-none dark:border-gray-800 dark:bg-gray-900 group-hover:dark:bg-gray-800;
+  }
+}
+
+@layer utilities {
+  @supports (-webkit-touch-callout: none) {
+    .max-height-IOS-img {
+      max-height: 300px;
+      object-fit: cover;
+    }
+  }
 }
