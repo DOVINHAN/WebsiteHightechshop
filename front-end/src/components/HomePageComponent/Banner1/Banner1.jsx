@@ -4,7 +4,7 @@ import Button from "../../shared/Button";
 
 const Banner1 = () => {
   return (
-    <div className="mt-20 container">
+    <div className="mt-20 container overflow-hidden">
       <div className="bg-black h-[450px] rounded-md grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
         {/* Content Section */}
         <div className="flex flex-col justify-center pl-10">

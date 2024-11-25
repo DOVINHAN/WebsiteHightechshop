@@ -79,9 +79,7 @@ const Footer = () => {
                 </ul>
               </div>
             </div>
-
             {/* social links */}
-
             <div className="py-8 px-4">
               <h1 className="sm:text-xl text-xl font-bold sm:text-left text-justify mb-3">
                 Liên kết khác
