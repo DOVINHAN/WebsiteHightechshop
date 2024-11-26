@@ -74,7 +74,7 @@ const Hero = () => {
     <div className="pt-10">
       <div className="container grid grid-cols-12 gap-6">
         {/* category list */}
-        <div className="col-span-12 md:col-span-3">
+        <div className="hidden col-span-12 md:block md:col-span-3">
           <ul className="space-y-2">
             {categoryList.map((data, index) => (
               <li
@@ -105,7 +105,7 @@ const Hero = () => {
                   }`}
                 >
                   {/* Content Section */}
-                  <div className="w-3/5  flex flex-col justify-center p-8">
+                  <div className="w-1/2 md:w-3/5  flex flex-col justify-center p-8">
                     <h1
                       data-aos="fade-down"
                       data-aos-delay="200"
@@ -116,7 +116,7 @@ const Hero = () => {
                     <h2
                       data-aos="fade-right"
                       data-aos-delay="250"
-                      className="text-3xl font-bold text-white my-5"
+                      className="text-xl md:text-3xl font-bold text-white my-5"
                     >
                       {item.content}
                     </h2>
@@ -135,13 +135,13 @@ const Hero = () => {
                   </div>
 
                   {/* Image Section */}
-                  <div className="w-2/5">
+                  <div className="w-1/2 md:w-2/5 flex items-center">
                     <img
                       data-aos="fade-left"
                       data-aos-delay="100"
                       src={item.img}
                       alt={`Slide ${index + 1}`}
-                      className="w-auto h-full object-cover"
+                      className="w-auto h-[300px] md:h-full object-cover"
                     />
                   </div>
                 </div>

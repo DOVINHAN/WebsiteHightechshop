@@ -5,7 +5,7 @@ import { FaShield } from "react-icons/fa6";
 
 const Services = () => {
   return (
-    <div className="mt-40 container">
+    <div className="mt-16 md:mt-40 container">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
         {/* Giao hàng miễn phí */}
         <div className="text-center">

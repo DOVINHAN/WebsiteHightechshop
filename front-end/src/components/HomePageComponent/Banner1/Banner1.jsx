@@ -18,7 +18,7 @@ const Banner1 = () => {
           <h2
             data-aos="fade-right"
             data-aos-delay="250"
-            className="text-3xl sm:text-4xl md:text-5xl font-bold text-white my-10"
+            className="text-2xl sm:text-2xl md:text-5xl font-bold text-white my-5 md:my-10"
           >
             Nâng tầm cuộc chơi với gaming thế hệ mới
           </h2>
