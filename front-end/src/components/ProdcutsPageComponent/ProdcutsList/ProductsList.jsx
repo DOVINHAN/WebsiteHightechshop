@@ -9,9 +9,9 @@ const ProductsList = () => {
   return (
     <div className="mt-20">
       <div className="container">
-        <div className="flex gap-10 items-center">
+        <div className="flex flex-col md:flex-row gap-0 md:gap-10 md:items-center">
           <Heading title={"APPLE"} />
-          <div className="flex gap-4 mt-5">
+          <div className="flex gap-4 mt-0 md:mt-5 mb-8 md:mb-0">
             {/* Dropdown options */}
             <Dropdown
               id="brand"
@@ -31,18 +31,18 @@ const ProductsList = () => {
           </div>
         </div>
         {/* Product List */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {products.slice(0, 16).map((product, index) => (
             <div
               key={product.id}
               data-aos="fade-up"
               data-aos-delay={`${index * 200}`}
-              className="rounded-md bg-white hover:bg-black/80 hover:text-white shadow-xl duration-high group max-w-[275px] h-[400px] mb-10 md:mb-0 overflow-hidden flex flex-col"
+              className="rounded-md bg-white hover:bg-black/80 hover:text-white shadow-xl duration-high group max-w-[275px] h-[350px] md:h-[400px] mb-10 md:mb-0 overflow-hidden flex flex-col"
             >
               {/* Image Section */}
               <div className="h-[270px] w-full overflow-hidden flex items-center justify-center">
                 <img
-                  src={product.img}
+                  src={product.images[0]}
                   alt={product.name}
                   className="h-full w-full object-cover object-center group-hover:scale-105 duration-300 drop-shadow-md"
                 />
@@ -54,8 +54,8 @@ const ProductsList = () => {
                   <h1 className="line-clamp-2 text-xl font-bold">
                     {product.name}
                   </h1>
-                  <div className="w-full flex items-center justify-center gap-1 text-secondary">
-                    <span className="text-red-500 font-bold text-lg">
+                  <div className="w-full flex items-center justify-center gap-1 flex-col md:flex-row">
+                    <span className="text-red-500 font-bold text-md md:text-lg">
                       {new Intl.NumberFormat("vi-VN", {
                         style: "currency",
                         currency: "VND",
@@ -72,7 +72,7 @@ const ProductsList = () => {
 
                 {/* Description and Button */}
                 <div className="mt-auto text-center">
-                  <p className="text-gray-500 group-hover:text-white duration-300 text-sm line-clamp-4">
+                  <p className="text-gray-500 group-hover:text-white duration-300 text-sm line-clamp-2 md:line-clamp-4">
                     {product.description}
                   </p>
                   <button className="bg-primary hover:bg-white text-white py-1 px-4 rounded-full mt-4 group-hover:bg-white group-hover:text-primary">
