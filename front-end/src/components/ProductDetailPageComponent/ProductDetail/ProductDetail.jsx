@@ -22,7 +22,7 @@ const ProductDetail = () => {
 
   return (
     <div className="mt-20">
-      <div className="container px-36">
+      <div className="container lg:px-36">
         {/* Header */}
         <div className="flex justify-between mb-5">
           <div className="inline-flex text-gray-500">
@@ -30,7 +30,7 @@ const ProductDetail = () => {
           </div>
         </div>
         {/* Product Details */}
-        <div className="grid grid-cols-2 gap-20 mt-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 mt-10">
           {/* Product Images */}
           <div className="flex gap-2">
             {/* Image List */}
@@ -49,11 +49,13 @@ const ProductDetail = () => {
             </div>
             {/* Big Image */}
             <div className="w-3/4">
-              <img
-                src={selectedImage}
-                alt="Selected"
-                className="w-full rounded-lg"
-              />
+              <div className="h-[250px] w-[250px] md:h-[450px] md:w-[450px] rounded-lg overflow-hidden">
+                <img
+                  src={selectedImage}
+                  alt="Selected"
+                  className="h-full w-full object-cover object-center"
+                />
+              </div>
             </div>
           </div>
 
