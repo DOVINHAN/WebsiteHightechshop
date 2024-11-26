@@ -8,22 +8,41 @@ import {
   FaMobileAlt,
 } from "react-icons/fa";
 
-const FooterLinks = [
+const CustomerSupport = [
   {
-    title: "Cái này cái ông tự bàn",
+    title: "Hướng dẫn thanh toán",
     link: "/#",
   },
   {
-    title: "Cái này cái ông tự bàn",
-    link: "/#about",
+    title: "Chính sách bảo hành",
+    link: "/#",
   },
   {
-    title: "Cái này cái ông tự bàn",
-    link: "/#contact",
+    title: "Thông tin liên hệ",
+    link: "/#",
   },
   {
-    title: "Cái này cái ông tự bàn",
-    link: "/#blog",
+    title: "Điều khoản sử dụng",
+    link: "/#",
+  },
+];
+
+const Information = [
+  {
+    title: "Tin tức",
+    link: "/#",
+  },
+  {
+    title: "Giới thiệu",
+    link: "/#",
+  },
+  {
+    title: "Phương thức thanh toán",
+    link: "/#",
+  },
+  {
+    title: "Tuyển dụng",
+    link: "/#",
   },
 ];
 
@@ -51,7 +70,7 @@ const Footer = () => {
                   Hỗ trợ khách hàng
                 </h1>
                 <ul className="flex flex-col gap-3">
-                  {FooterLinks.map((link) => (
+                  {CustomerSupport.map((link) => (
                     <li
                       className="cursor-pointer hover:text-primary hover:translate-x-1 duration-300 text-gray-200"
                       key={link.title}
@@ -68,7 +87,7 @@ const Footer = () => {
                   Tài khoản
                 </h1>
                 <ul className="flex flex-col gap-3">
-                  {FooterLinks.map((link) => (
+                  {Information.map((link) => (
                     <li
                       className="cursor-pointer hover:text-primary hover:translate-x-1 duration-300 text-gray-200"
                       key={link.title}
@@ -98,11 +117,11 @@ const Footer = () => {
               <div className="mt-6">
                 <div className="flex items-center gap-3">
                   <FaLocationArrow />
-                  <p>Noida, Uttar Pradesh</p>
+                  <p>688/91 Quang Trung</p>
                 </div>
                 <div className="flex items-center gap-3 mt-3">
                   <FaMobileAlt />
-                  <p>+91 123456789</p>
+                  <p>+0359256696</p>
                 </div>
               </div>
             </div>
