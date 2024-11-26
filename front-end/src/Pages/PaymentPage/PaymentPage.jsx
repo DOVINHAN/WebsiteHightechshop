@@ -1,9 +1,10 @@
 import React from "react";
+import Payment from "../../components/PaymentPageComponent/Payment/Payment";
 
 const PaymentPage = () => {
   return (
     <div>
-      <PaymentPage />
+      <Payment />
     </div>
   );
 };
