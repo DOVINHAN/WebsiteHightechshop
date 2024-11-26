@@ -113,7 +113,7 @@ const Payment = () => {
                 >
                   <div className="flex items-center gap-6">
                     <img
-                      src={product.img}
+                      src={product.images[0]}
                       alt={product.name}
                       className="w-14 h-14 object-cover rounded"
                     />

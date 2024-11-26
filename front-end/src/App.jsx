@@ -16,6 +16,7 @@ import PaymentPage from "./Pages/PaymentPage/PaymentPage";
 import CartPage from "./Pages/CartPage/CartPage";
 import AboutPage from "./Pages/AboutPage/AboutPage";
 import ProductMangementPage from "./Pages/ProductMangementPage/ProductMangementPage";
+import UserProfilePage from "./Pages/UserProfilePage/UserProfilePage";
 
 const App = () => {
   React.useEffect(() => {
@@ -49,6 +50,7 @@ const App = () => {
           <Route path="/giohang" element={<CartPage />} />
           <Route path="/thanhtoan" element={<PaymentPage />} />
           <Route path="/quanlysanpham" element={<ProductMangementPage />} />
+          <Route path="/nguoidung" element={<UserProfilePage />} />
         </Routes>
         <Footer />
       </BrowserRouter>
