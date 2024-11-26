@@ -6,9 +6,9 @@ import Input from "../../shared/Input";
 const Login = () => {
   return (
     <div className="mt-16">
-      <div className="container grid grid-cols-2 h-[550px]">
+      <div className="container grid grid-cols-1 md:grid-cols-2 h-[550px]">
         {/* Image Section */}
-        <div className="overflow-hidden">
+        <div className="overflow-hidden h-[300px] md:h-[500px]">
           <img
             src={img1}
             alt="Register"
@@ -16,8 +16,8 @@ const Login = () => {
           />
         </div>
         {/* Register Section */}
-        <div className="flex flex-col justify-center px-32">
-          <h2 className="text-3xl mb-2">Đăng nhập</h2>
+        <div className="flex flex-col justify-center md:px-32 mt-10 md:mt-0">
+          <h2 className="text-3xl mb-2 font-medium">Đăng nhập</h2>
           <div className="text-gray-600">Nhập thông tin</div>
           {/* Input Fields */}
           <div className="space-y-8 my-7 px-4">

@@ -43,10 +43,6 @@ const App = () => {
             element={<ProductDetailPage />}
           />
           <Route path="/vechungtoi" element={<AboutPage />} />
-          <Route
-            path="/trangsanpham/chitietsanpham"
-            element={<ProductDetailPage />}
-          />
           <Route path="/giohang" element={<CartPage />} />
           <Route path="/thanhtoan" element={<PaymentPage />} />
           <Route path="/quanlysanpham" element={<ProductMangementPage />} />
