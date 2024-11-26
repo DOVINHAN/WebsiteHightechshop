@@ -3,15 +3,17 @@ import { FaBars, FaCaretDown } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { HiMenuAlt3, HiMenuAlt1 } from "react-icons/hi";
 import Logo from "../../assets/logo.png";
+import ResponsiveMenu from "./ResponsiveMenu";
 
-const MenuLinks = [
+export const MenuLinks = [
   { id: 1, name: "Trang chủ", link: "/#" },
   { id: 2, name: "Giới thiệu", link: "/#shop" },
   { id: 3, name: "Về chúng tôi", link: "/#shop" },
 ];
 
-const DropdownLinks1 = [
+export const DropdownLinks1 = [
   { id: 1, name: "Iphone", link: "/#" },
   { id: 2, name: "Ipad", link: "/#" },
   { id: 3, name: "Samsung", link: "/#" },
@@ -24,7 +26,11 @@ const DropdownLinks1 = [
 ];
 
 const Navbar = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const toggleMenu = () => {
+    setShowMenu(!showMenu);
+  };
+
   const [dropdown1Open, setDropdown1Open] = useState(false);
 
   const toggleDropdown1 = () => {
@@ -53,6 +59,36 @@ const Navbar = () => {
             <Link to="/" className="">
               <img src={Logo} alt="Logo" className="w-[50px] md:w-[150px]" />
             </Link>
+            {/* Responsive navbar */}
+            <div className="md:hidden flex items-center gap-4">
+              {/* Search Bar */}
+              <div className="relative group w-10 h-10">
+                <input
+                  type="text"
+                  placeholder=""
+                  className="absolute top-0 left-0 w-full h-full opacity-0 focus:opacity-100 transition-all duration-300 rounded-full border border-gray-300 focus:border-primary focus:outline-none p-2"
+                />
+                <IoMdSearch className="text-black absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl cursor-pointer" />
+              </div>
+
+              {/* Mobile Hamburger menu */}
+              <div className="">
+                {showMenu ? (
+                  <HiMenuAlt1
+                    onClick={toggleMenu}
+                    className="cursor-pointer transition-all"
+                    size={30}
+                  />
+                ) : (
+                  <HiMenuAlt3
+                    onClick={toggleMenu}
+                    className="cursor-pointer transition-all"
+                    size={30}
+                  />
+                )}
+              </div>
+            </div>
+
             {/* Menu Items */}
             <div
               className={` hidden md:block
@@ -125,6 +161,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+      <ResponsiveMenu showMenu={showMenu} togglemenu={toggleMenu} />
     </div>
   );
 };
