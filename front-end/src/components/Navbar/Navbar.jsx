@@ -49,15 +49,13 @@ const Navbar = () => {
 
       <div className="py-4">
         <div className="container flex flex-col lg:flex-row justify-between items-center">
-          {/* Logo và Nút Menu trên thiết bị di động */}
           <div className="flex justify-between items-center w-full lg:w-auto">
             <Link to="/" className="">
               <img src={Logo} alt="Logo" className="w-[50px] md:w-[150px]" />
             </Link>
             {/* Menu Items */}
             <div
-              className={`${
-                menuOpen ? "flex" : "hidden"
+              className={` hidden md:block
               } flex-col lg:flex lg:flex-row lg:items-center w-full lg:w-auto lg:gap-4 mt-4 lg:mt-0 pl-7`}
             >
               <ul className="flex flex-col lg:flex-row lg:items-center gap-1 w-full lg:w-auto">

@@ -44,7 +44,7 @@ const Banner2 = () => {
               </button>
             </div>
             {/* img */}
-            <div className="w-1/2 md:w-3/5">
+            <div className="w-1/2 md:w-3/5 overflow-hidden">
               <img
                 data-aos="fade-left"
                 data-aos-delay="100"
