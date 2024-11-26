@@ -1,13 +1,13 @@
 import React from "react";
 import Heading from "../../shared/Heading";
-import products from "../../../data/productsDummnyData";
 import Button from "../../shared/Button";
+import products from "../../../data/productsDummnyData";
 
-const BestSellingProduct = () => {
+const Relatedproducts = () => {
   return (
     <div className="mt-20">
       <div className="container">
-        <Heading title={"SẢN PHẨM GIẢM GIÁ"} />
+        <Heading title={"SẢN PHẨM LIÊN QUAN"} />
         {/* Product List */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {products.slice(0, 4).map((product, index) => (
@@ -64,16 +64,16 @@ const BestSellingProduct = () => {
           ))}
         </div>
         {/* view all products button */}
-        <div className="mt-10 flex justify-center">
+        {/* <div className="mt-10 flex justify-center">
           <Button
             bgColor="bg-primary"
             text={"Xem tất cả sản phẩm"}
             textColor={"text-white"}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );
 };
 
-export default BestSellingProduct;
+export default Relatedproducts;

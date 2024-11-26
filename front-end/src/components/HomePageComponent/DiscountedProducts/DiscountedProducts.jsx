@@ -21,7 +21,7 @@ const DiscountedProducts = () => {
                 {/* Image Section */}
                 <div className="h-[270px] w-full overflow-hidden flex items-center justify-center">
                   <img
-                    src={product.img}
+                    src={product.images[0]}
                     alt={product.name}
                     className="h-full w-full object-cover object-center group-hover:scale-105 duration-300 drop-shadow-md"
                   />
