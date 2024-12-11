@@ -5,9 +5,7 @@ import UserMangement from "../../components/AdminPageComponent/UserManagement/Us
 import ProductsManagement from "../../components/AdminPageComponent/ProductsManagement/ProductsManagement";
 
 const AdminPage = () => {
-  const [activeComponent, setActiveComponent] = useState(
-    "CategoriesManagement"
-  );
+  const [activeComponent, setActiveComponent] = useState("UserMangement");
   const renderComponent = () => {
     switch (activeComponent) {
       case "CategoriesManagement":
@@ -17,20 +15,20 @@ const AdminPage = () => {
       case "UserMangement":
         return <UserMangement />;
       default:
-        return <CategoriesManagement />;
+        return <UserMangement />;
     }
   };
 
   const getHeaderText = () => {
     switch (activeComponent) {
+      case "UserMangement":
+        return "Quản lý người dùng";
       case "CategoriesManagement":
         return "Quản lý danh mục";
       case "ProductMangementPage":
         return "Quản lý sản phẩm";
-      case "UserMangement":
-        return "Quản lý người dùng";
       default:
-        return "Quản lý danh mục";
+        return "Quản lý người dùng";
     }
   };
 
