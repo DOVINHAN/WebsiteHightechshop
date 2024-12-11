@@ -88,32 +88,32 @@ import img80 from "../assets/productsDummyData/xiao40.jpg";
 
 /////
 
-import img81 from "../assets/productsDummyData/ip1.jpg";
-import img82 from "../assets/productsDummyData/ip2.jpg";
-import img83 from "../assets/productsDummyData/ip3.jpg";
-import img84 from "../assets/productsDummyData/ip4.jpg";
-import img85 from "../assets/productsDummyData/ip5.jpg";
-import img86 from "../assets/productsDummyData/ip6.jpg";
-import img87 from "../assets/productsDummyData/ip7.jpg";
-import img88 from "../assets/productsDummyData/ip8.jpg";
-import img89 from "../assets/productsDummyData/ip9.jpg";
-import img90 from "../assets/productsDummyData/ip10.jpg";
+import img81 from "../assets/productsDummyData/ip25.jpg";
+import img82 from "../assets/productsDummyData/ip25.jpg";
+import img83 from "../assets/productsDummyData/ip25.jpg";
+import img84 from "../assets/productsDummyData/ip25.jpg";
+import img85 from "../assets/productsDummyData/ip25.jpg";
+import img86 from "../assets/productsDummyData/ip25.jpg";
+import img87 from "../assets/productsDummyData/ip25.jpg";
+import img88 from "../assets/productsDummyData/ip25.jpg";
+import img89 from "../assets/productsDummyData/ip25.jpg";
+import img90 from "../assets/productsDummyData/ip25.jpg";
 
-import img91 from "../assets/productsDummyData/ip11.jpg";
-import img92 from "../assets/productsDummyData/ip12.jpg";
-import img93 from "../assets/productsDummyData/ip13.jpg";
-import img94 from "../assets/productsDummyData/ip14.jpg";
-import img95 from "../assets/productsDummyData/ip15.jpg";
-import img96 from "../assets/productsDummyData/ip16.jpg";
-import img97 from "../assets/productsDummyData/ip17.jpg";
-import img98 from "../assets/productsDummyData/ip18.jpg";
-import img99 from "../assets/productsDummyData/ip19.jpg";
-import img100 from "../assets/productsDummyData/ip20.jpg";
+import img91 from "../assets/productsDummyData/ip25.jpg";
+import img92 from "../assets/productsDummyData/ip25.jpg";
+import img93 from "../assets/productsDummyData/ip25.jpg";
+import img94 from "../assets/productsDummyData/ip25.jpg";
+import img95 from "../assets/productsDummyData/ip25.jpg";
+import img96 from "../assets/productsDummyData/ip25.jpg";
+import img97 from "../assets/productsDummyData/ip25.jpg";
+import img98 from "../assets/productsDummyData/ip25.jpg";
+import img99 from "../assets/productsDummyData/ip25.jpg";
+import img100 from "../assets/productsDummyData/ip25.jpg";
 
-import img101 from "../assets/productsDummyData/ip21.jpg";
-import img102 from "../assets/productsDummyData/ip22.jpg";
-import img103 from "../assets/productsDummyData/ip23.jpg";
-import img104 from "../assets/productsDummyData/ip24.jpg";
+import img101 from "../assets/productsDummyData/ip25.jpg";
+import img102 from "../assets/productsDummyData/ip25.jpg";
+import img103 from "../assets/productsDummyData/ip25.jpg";
+import img104 from "../assets/productsDummyData/ip25.jpg";
 import img105 from "../assets/productsDummyData/ip25.jpg";
 import img106 from "../assets/productsDummyData/ip26.jpg";
 import img107 from "../assets/productsDummyData/ip27.jpg";
