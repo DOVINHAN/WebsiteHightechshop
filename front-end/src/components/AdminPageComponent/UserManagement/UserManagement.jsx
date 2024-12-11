@@ -3,7 +3,6 @@ import { IoMdSearch } from "react-icons/io";
 import Pagination from "../../shared/Pagination";
 
 const UserMangement = () => {
-  // Dummy data cho người dùng
   const users = [
     { id: 1, name: "Nguyễn Văn A", contact: "nguyenvana@example.com" },
     { id: 2, name: "Trần Thị B", contact: "tranthib@example.com" },
@@ -12,7 +11,6 @@ const UserMangement = () => {
     { id: 5, name: "Đặng Văn E", contact: "0923456789" },
   ];
 
-  // Xử lý các hành động
   const handleEdit = (id) => {
     alert(`Chỉnh sửa người dùng với ID: ${id}`);
   };
