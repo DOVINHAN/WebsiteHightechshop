@@ -2,6 +2,7 @@ import React from "react";
 import img1 from "../../../assets/register/img1.jpg";
 import Button from "../../shared/Button";
 import Input from "../../shared/Input";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   return (
@@ -33,7 +34,9 @@ const Login = () => {
           />
           <div className="text-gray-500 text-sm mt-4 inline-flex">
             Đã có tài khoản?{" "}
-            <p className="text-primary cursor-pointer pl-2">Đăng ký</p>
+            <Link to="/dangky" className="">
+              <p className="text-primary cursor-pointer pl-2">Đăng ký</p>
+            </Link>
           </div>
           <div className="text-gray-500 text-sm">Quên mật khẩu</div>
         </div>

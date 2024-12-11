@@ -44,10 +44,14 @@ const Navbar = () => {
         <div className="container text-white text-sm">
           <div className="flex justify-end gap-5">
             <button className="border-b-2 border-transparent hover:border-white">
-              Đăng ký
+              <Link to="/dangky" className="">
+                Đăng ký
+              </Link>
             </button>
             <button className="border-b-2 border-transparent hover:border-white">
-              Đăng nhập
+              <Link to="/dangnhap" className="">
+                Đăng nhập
+              </Link>
             </button>
           </div>
         </div>
@@ -152,12 +156,14 @@ const Navbar = () => {
               <IoMdSearch className="text-gray-500 group-hover:text-primary absolute top-1/2 -translate-y-1/2 right-3" />
             </div>
             {/* Cart */}
-            <button className="relative p-3">
-              <FaCartShopping className="text-xl text-gray-600 " />
-              <div className="w-4 h-4 bg-red-700 text-white rounded-full absolute top-0 right-0 flex items-center justify-center text-xs">
-                0
-              </div>
-            </button>
+            <Link to="/thanhtoan" className="">
+              <button className="relative p-3">
+                <FaCartShopping className="text-xl text-gray-600 " />
+                <div className="w-4 h-4 bg-red-700 text-white rounded-full absolute top-0 right-0 flex items-center justify-center text-xs">
+                  0
+                </div>
+              </button>
+            </Link>
           </div>
         </div>
       </div>
