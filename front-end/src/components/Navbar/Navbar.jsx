@@ -1,5 +1,5 @@
 import { IoMdSearch } from "react-icons/io";
-import { FaCaretDown } from "react-icons/fa";
+import { FaCaretDown, FaUser } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -162,6 +162,12 @@ const Navbar = () => {
                 <div className="w-4 h-4 bg-red-700 text-white rounded-full absolute top-0 right-0 flex items-center justify-center text-xs">
                   0
                 </div>
+              </button>
+            </Link>
+            {/* user */}
+            <Link to="/nguoidung" className="">
+              <button className="relative p-3">
+                <FaUser className="text-xl text-gray-600 " />
               </button>
             </Link>
           </div>

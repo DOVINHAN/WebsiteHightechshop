@@ -121,7 +121,7 @@ const ProductDetail = () => {
                 {product.sizes.map((size, index) => (
                   <div
                     key={index}
-                    className={`w-10 h-10 flex items-center justify-center cursor-pointer rounded border transition-colors p-2 ${
+                    className={`w-13 h-10 flex items-center justify-center cursor-pointer rounded border transition-colors p-2 ${
                       selectedSize === size
                         ? "bg-primary text-white"
                         : "bg-white border-gray-300 text-gray-500"
