@@ -10,10 +10,10 @@ const UserProfilePage = () => {
     switch (activeComponent) {
       case "UserProfile":
         return <UserProfile />;
-      case "CancelledOrder":
-        return <CancelledOrder />;
       case "ReceivedOrder":
         return <ReceivedOrder />;
+      case "CancelledOrder":
+        return <CancelledOrder />;
       default:
         return <UserProfile />;
     }
@@ -24,9 +24,9 @@ const UserProfilePage = () => {
       case "UserProfile":
         return "Hồ sơ";
       case "CancelledOrder":
-        return "Đơn hàng đã đặt";
-      case "ReceivedOrder":
         return "Đơn hàng đã hủy";
+      case "ReceivedOrder":
+        return "Đơn hàng đã đặt";
       default:
         return "Hồ sơ";
     }
@@ -69,21 +69,21 @@ const UserProfilePage = () => {
               <div className="p-3">
                 <div
                   className={`mb-2 cursor-pointer ${
-                    activeComponent === "CancelledOrder"
-                      ? "text-red-500 font-bold"
-                      : "text-gray-500"
-                  }`}
-                  onClick={() => setActiveComponent("CancelledOrder")}
-                >
-                  Đơn hàng đã đặt
-                </div>
-                <div
-                  className={`cursor-pointer ${
                     activeComponent === "ReceivedOrder"
                       ? "text-red-500 font-bold"
                       : "text-gray-500"
                   }`}
                   onClick={() => setActiveComponent("ReceivedOrder")}
+                >
+                  Đơn hàng đã đặt
+                </div>
+                <div
+                  className={`cursor-pointer ${
+                    activeComponent === "CancelledOrder"
+                      ? "text-red-500 font-bold"
+                      : "text-gray-500"
+                  }`}
+                  onClick={() => setActiveComponent("CancelledOrder")}
                 >
                   Đơn hàng đã hủy
                 </div>
