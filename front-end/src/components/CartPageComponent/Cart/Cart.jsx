@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "../../shared/Button";
 import products from "../../../data/productsDummnyData";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
   return (
@@ -117,11 +118,13 @@ const Cart = () => {
 
             {/* Button */}
             <div className="mt-8 flex justify-center">
-              <Button
-                bgColor="bg-primary"
-                text={"Tiến hành thanh toán"}
-                textColor={"text-white"}
-              />
+              <Link to="/thanhtoan">
+                <Button
+                  bgColor="bg-primary"
+                  text={"Tiến hành thanh toán"}
+                  textColor={"text-white"}
+                />
+              </Link>
             </div>
           </div>
         </div>
