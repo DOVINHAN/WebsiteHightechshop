@@ -5,9 +5,11 @@ import { FaCarSide } from "react-icons/fa6";
 import { GiRecycle } from "react-icons/gi";
 import products from "../../../data/productsDummnyData";
 import Relatedproducts from "../Relatedproducts/Relatedproducts";
+import { useParams } from "react-router-dom";
 
 const ProductDetail = () => {
-  const product = products[0];
+  const { id } = useParams();
+  const product = products.find((data) => data.id === parseInt(id));
 
   const [selectedImage, setSelectedImage] = useState(product.images[0]);
 
@@ -105,7 +107,8 @@ const ProductDetail = () => {
                 {product.colors.map((color, index) => (
                   <div
                     key={index}
-                    className={`w-6 h-6 rounded-full cursor-pointer bg-${color.toLowerCase()} border-2 border-black`}
+                    className="w-6 h-6 rounded-full cursor-pointer border-2 border-black"
+                    style={{ backgroundColor: color.toLowerCase() }}
                   ></div>
                 ))}
               </div>

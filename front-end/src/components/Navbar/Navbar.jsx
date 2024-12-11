@@ -1,5 +1,5 @@
 import { IoMdSearch } from "react-icons/io";
-import { FaBars, FaCaretDown } from "react-icons/fa";
+import { FaCaretDown } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -8,9 +8,9 @@ import Logo from "../../assets/logo.png";
 import ResponsiveMenu from "./ResponsiveMenu";
 
 export const MenuLinks = [
-  { id: 1, name: "Trang chủ", link: "/#" },
-  { id: 2, name: "Giới thiệu", link: "/#shop" },
-  { id: 3, name: "Về chúng tôi", link: "/#shop" },
+  { id: 1, name: "Trang chủ", link: "/" },
+  { id: 2, name: "Giới thiệu", link: "/" },
+  { id: 3, name: "Về chúng tôi", link: "/AboutUs" },
 ];
 
 export const DropdownLinks1 = [
