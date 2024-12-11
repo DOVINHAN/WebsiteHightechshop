@@ -47,7 +47,7 @@ const Cart = () => {
                   {/* product */}
                   <td className="border-b border-gray-300 p-3 py-8 flex items-center gap-6">
                     <img
-                      src={product.img}
+                      src={product.images[0]}
                       alt={product.name}
                       className="w-14 h-14 object-cover rounded"
                     />
