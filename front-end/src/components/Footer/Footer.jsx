@@ -1,5 +1,5 @@
 import React from "react";
-import footerLogo from "../../assets/logo.png";
+import footerLogo from "../../assets/logo-removebg.png";
 import {
   FaFacebook,
   FaInstagram,
@@ -53,14 +53,15 @@ const Footer = () => {
         <div data-aos="zoom-in" className="grid md:grid-cols-3 pb-44 pt-5">
           {/* company details */}
           <div className="py-8 px-4">
-            <h1 className="sm:text-3xl text-xl font-bold sm:text-left text-justify mb-3 flex items-center gap-3">
-              <img src={footerLogo} alt="" className="max-w-[50px]" />
-              TechnoShop
-            </h1>
-            <p className="mt-10">
-              Nhận 10% giảm giá cho đơn hàng đầu tiên của bạn
-            </p>
-          </div>
+  <h1 className="sm:text-3xl text-xl font-bold sm:text-left text-justify mb-3 flex flex-col items-center">
+    <img src={footerLogo} alt="" className="max-w-[200px]" />
+    HighTech Shop
+  </h1>
+  <p className="mt-10 text-center">
+    UY TÍN TẠO NÊN THƯƠNG HIỆU
+  </p>
+</div>
+
 
           {/* Footer Links */}
           <div className="grid grid-cols-2 sm:grid-cols-3 col-span-2 md:pl-10">
