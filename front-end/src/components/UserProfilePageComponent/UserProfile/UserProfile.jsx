@@ -1,6 +1,5 @@
 import React from "react";
 import Button from "../../shared/Button";
-import products from "../../../data/productsDummnyData";
 
 const UserProfile = () => {
   return (

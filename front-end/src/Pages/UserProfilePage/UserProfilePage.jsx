@@ -33,7 +33,7 @@ const UserProfilePage = () => {
   };
 
   return (
-    <div className="mt-20">
+    <div className="mt-10">
       <div className="container px-36">
         {/* Header */}
         <div className="flex justify-between">
@@ -44,7 +44,7 @@ const UserProfilePage = () => {
         </div>
 
         {/* Payment Section */}
-        <div className="mt-16 grid grid-cols-12 gap-10">
+        <div className="mt-10 grid grid-cols-12 gap-10">
           {/* SideBar */}
           <div className="col-span-12 md:col-span-3">
             <div>

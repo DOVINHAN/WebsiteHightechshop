@@ -58,20 +58,22 @@ const CancelledOrder = () => {
       <table className="table-auto w-full border-collapse border-spacing-y-4 border-spacing-x-2">
         <thead>
           <tr>
-            <th className="border-b border-gray-300 p-3 text-left w-1/6"></th>
-            <th className="border-b border-gray-300 p-3 text-left w-1/4">
+            <th className="border-b border-gray-300 p-3 text-left w-1/12">
+              Ảnh
+            </th>
+            <th className="border-b border-gray-300 p-3 text-left w-3/12">
               Tên người nhận
             </th>
-            <th className="border-b border-gray-300 p-3 text-left w-1/4">
+            <th className="border-b border-gray-300 p-3 text-left w-3/12">
               Địa chỉ
             </th>
-            <th className="border-b border-gray-300 p-3 text-left w-1/6">
+            <th className="border-b border-gray-300 p-3 text-left w-1/12">
               Số điện thoại
             </th>
-            <th className="border-b border-gray-300 p-3 text-left w-1/6">
+            <th className="border-b border-gray-300 p-3 text-left w-2/12">
               Tổng số tiền
             </th>
-            <th className="border-b border-gray-300 p-3 text-left w-1/6">
+            <th className="border-b border-gray-300 p-3 text-left w-2/12">
               Tình trạng
             </th>
           </tr>
