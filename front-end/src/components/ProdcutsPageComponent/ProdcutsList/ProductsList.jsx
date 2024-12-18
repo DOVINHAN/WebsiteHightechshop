@@ -3,6 +3,7 @@ import Heading from "../../shared/Heading";
 import products from "../../../data/productsDummnyData";
 import Dropdown from "../../shared/Dropdown";
 import Pagination from "../../shared/Pagination";
+import { Link } from "react-router-dom";
 
 const ProductsList = () => {
   const generateProductUrl = (product) => {

@@ -11,7 +11,9 @@ const ProductDetail = () => {
   const { id } = useParams();
   const product = products.find((data) => data.id === parseInt(id));
 
-  const [selectedImage, setSelectedImage] = useState(product.images[0]);
+  const [selectedImage, setSelectedImage] = useState(
+    product?.images ? product.images[0] : null
+  );
 
   const totalReviews = product.reviews.length;
   const averageStars =

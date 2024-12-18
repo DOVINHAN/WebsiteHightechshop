@@ -4,6 +4,7 @@ import img2 from "../../../assets/productsDummyData/ip26.jpg";
 import img3 from "../../../assets/productsDummyData/ip27.jpg";
 import img4 from "../../../assets/productsDummyData/ip28.jpg";
 import img5 from "../../../assets/productsDummyData/ip29.jpg";
+import Pagination from "../../shared/Pagination";
 
 const bills = [
   {
@@ -101,6 +102,9 @@ const ReceivedOrder = () => {
           ))}
         </tbody>
       </table>
+      <div className="mt-10 flex justify-center">
+        <Pagination />
+      </div>
     </div>
   );
 };
