@@ -167,6 +167,9 @@ const ProductsManagement = () => {
           ))}
         </tbody>
       </table>
+      <div className="mt-10 flex justify-center">
+        <Pagination />
+      </div>
 
       {/* Add Product */}
       {isAddProductModalOpen && (
@@ -236,6 +239,7 @@ const ProductsManagement = () => {
           </div>
         </div>
       )}
+      {/* Update Product */}
       {isUpdateProductModalOpen && (
         <div
           className="fixed top-0 left-0 z-50 flex justify-center items-center w-full h-screen bg-black bg-opacity-50"
@@ -303,6 +307,7 @@ const ProductsManagement = () => {
           </div>
         </div>
       )}
+      {/* Delete Product */}
       {isDeleteProductModalOpen && (
         <div
           className="fixed top-0 left-0 z-50 flex justify-center items-center w-full h-screen bg-black bg-opacity-50"
