@@ -85,19 +85,19 @@ const ProductsManagement = () => {
       <table className="table-auto w-full border-collapse border-spacing-y-4 border-spacing-x-2 mt-6">
         <thead>
           <tr>
-            <th className="border-b border-gray-300 p-3 text-left w-1/5">
+            <th className="border-b border-gray-300 p-3 text-left w-2/12">
               Ảnh
             </th>
-            <th className="border-b border-gray-300 p-3 text-left w-1/5">
+            <th className="border-b border-gray-300 p-3 text-left w-1/12">
               Tên sản phẩm
             </th>
-            <th className="border-b border-gray-300 p-3 text-left w-2/5">
+            <th className="border-b border-gray-300 p-3 text-left w-3/12">
               Miêu tả
             </th>
             <th className="border-b border-gray-300 p-3 text-left w-1/5">
               Giá
             </th>
-            <th className="border-b border-gray-300 p-3 text-left w-1/5">
+            <th className="border-b border-gray-300 p-3 text-left w-2/5">
               Hành động
             </th>
           </tr>
