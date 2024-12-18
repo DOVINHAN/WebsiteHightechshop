@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Button from "../../shared/Button";
 import img1 from "../../../assets/productsDummyData/ip25.jpg";
 import img2 from "../../../assets/productsDummyData/ip26.jpg";
 import img3 from "../../../assets/productsDummyData/ip27.jpg";

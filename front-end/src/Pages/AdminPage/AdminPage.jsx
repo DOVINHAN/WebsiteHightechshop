@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import CategoriesManagement from "../../components/AdminPageComponent/CategoriesManagement/CategoriesManagement";
-import ProductMangementPage from "../ProductMangementPage/ProductMangementPage";
 import UserMangement from "../../components/AdminPageComponent/UserManagement/UserManagement";
 import ProductsManagement from "../../components/AdminPageComponent/ProductsManagement/ProductsManagement";
+import OrdersManagement from "../../components/AdminPageComponent/OrdersManagement/OrdersManagement";
 
 const AdminPage = () => {
   const [activeComponent, setActiveComponent] = useState("UserMangement");
@@ -14,6 +14,8 @@ const AdminPage = () => {
         return <ProductsManagement />;
       case "UserMangement":
         return <UserMangement />;
+      case "OrdersManagement":
+        return <OrdersManagement />;
       default:
         return <UserMangement />;
     }
@@ -27,6 +29,8 @@ const AdminPage = () => {
         return "Quản lý danh mục";
       case "ProductMangementPage":
         return "Quản lý sản phẩm";
+      case "OrdersManagement":
+        return "Quản lý đơn hàng";
       default:
         return "Quản lý người dùng";
     }
@@ -75,7 +79,7 @@ const AdminPage = () => {
                   Quản lý sản phẩm
                 </div>
                 <div
-                  className={`cursor-pointer ${
+                  className={`mb-2 cursor-pointer ${
                     activeComponent === "CategoriesManagement"
                       ? "text-red-500 font-bold"
                       : "text-gray-500"
@@ -83,6 +87,16 @@ const AdminPage = () => {
                   onClick={() => setActiveComponent("CategoriesManagement")}
                 >
                   Quản lý danh mục
+                </div>
+                <div
+                  className={`mb-2 cursor-pointer ${
+                    activeComponent === "OrdersManagement"
+                      ? "text-red-500 font-bold"
+                      : "text-gray-500"
+                  }`}
+                  onClick={() => setActiveComponent("OrdersManagement")}
+                >
+                  Quản lý đơn hàng
                 </div>
               </div>
             </div>
