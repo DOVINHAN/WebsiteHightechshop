@@ -1,7 +1,6 @@
 import React from "react";
 
 const CategoriesManagement = () => {
-  // Dummy data cho danh mục
   const categories = [
     "Iphone",
     "Ipad",
@@ -23,6 +22,8 @@ const CategoriesManagement = () => {
     alert(`Xóa danh mục: ${category}`);
   };
 
+  const [isAddCategoryModalOpen, setAddCategoryModalOpen] =
+    React.useState(false);
   return (
     <div className="w-full max-w-3xl">
       <div className="text-lg font-semibold mb-4 text-primary">
@@ -30,7 +31,10 @@ const CategoriesManagement = () => {
       </div>
 
       <div className="">
-        <button className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-dark">
+        <button
+          onClick={() => setAddCategoryModalOpen(true)}
+          className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-dark"
+        >
           Thêm danh mục
         </button>
       </div>
@@ -68,6 +72,56 @@ const CategoriesManagement = () => {
           ))}
         </tbody>
       </table>
+      {/* add category modal*/}
+      {isAddCategoryModalOpen && (
+        <div
+          id="addCategory-modal"
+          className="fixed top-0 left-0 z-50 flex justify-center items-center w-full h-screen bg-black bg-opacity-50"
+          onClick={() => setAddCategoryModalOpen(false)}
+        >
+          <div
+            className="relative bg-white rounded-lg shadow  w-full max-w-md"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between p-4 border-b ">
+              <h3 className="text-lg font-semibold text-gray-900 ">
+                Thêm danh mục
+              </h3>
+              <button
+                onClick={() => setAddCategoryModalOpen(false)}
+                className="text-gray-400 hover:bg-gray-200 rounded-lg p-1"
+              >
+                <span>&times;</span>
+              </button>
+            </div>
+            {/* Form Content */}
+            <form className="p-4">
+              <div className="mb-4">
+                <label
+                  htmlFor="name"
+                  className="block mb-2 text-sm font-medium text-gray-900"
+                >
+                  Tên danh mục
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  className="w-full p-2 border rounded-md"
+                />
+              </div>
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                >
+                  Thêm
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {/* update category modal */}
     </div>
   );
 };
