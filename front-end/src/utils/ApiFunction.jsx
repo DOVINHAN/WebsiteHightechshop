@@ -103,7 +103,7 @@ export async function updateProdcut(
 export async function deleteProductById(product_id) {
   const formData = new FormData();
   formData.append("product_id", product_id);
-  const response = await api.post(`/api/product/delete`, formData);
+  const response = await api.delete(`/api/product/delete`, formData);
   return response;
 }
 
@@ -141,7 +141,7 @@ export async function updateCategory(category_id) {
 export async function deleteCategoryById(category_id) {
   const formData = new FormData();
   formData.append("category_id", category_id);
-  const response = await api.get(`/api/category/delete`, formData);
+  const response = await api.delete(`/api/category/delete`, formData);
   return response;
 }
 
@@ -185,7 +185,7 @@ export async function deleteOrderDetaulById(orderDetail_id) {
   const formData = new FormData();
   formData.append("orderDetail_id", orderDetail_id);
 
-  const response = await api.post(
+  const response = await api.delete(
     `/api/orderDetail/deleteOrderDetaulById`,
     formData
   );
@@ -230,6 +230,63 @@ export async function deleteOrderById(order_id) {
   const formData = new FormData();
   formData.append("order_id", order_id);
 
-  const response = await api.post(`/api/order/delete`, formData);
+  const response = await api.delete(`/api/order/delete`, formData);
+  return response;
+}
+
+// *************
+// user
+// *************
+
+export async function login(email, password) {
+  const formData = new FormData();
+  formData.append("email", email);
+  formData.append("password", password);
+
+  const response = await api.post(`/api/user/login`, formData);
+  return response;
+}
+
+export async function register(name, email, password) {
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("email", email);
+  formData.append("password", password);
+
+  const response = await api.post(`/api/user/register`, formData);
+  return response;
+}
+
+export async function updateUser(user_id, name, password) {
+  const formData = new FormData();
+  formData.append("user_id", user_id);
+  formData.append("name", name);
+  formData.append("password", password);
+
+  const response = await api.post(`/api/user/update`, formData);
+  return response;
+}
+
+export async function getUserByUserId(user_id) {
+  const formData = new FormData();
+  formData.append("user_id", user_id);
+
+  const response = await api.post(`/api/user/getUserByUserId`, formData);
+  return response;
+}
+
+export async function getUserByUserEmail(email) {
+  const formData = new FormData();
+  formData.append("email", email);
+
+  const response = await api.post(`/api/user/getUserByUserEmail`, formData);
+  return response;
+}
+
+export async function deleteUserById(user_id) {
+  const formData = new FormData();
+  formData.append("user_id", user_id);
+
+  const response = await api.delete(`/api/user/deleteUserById`, formData);
   return response;
 }
