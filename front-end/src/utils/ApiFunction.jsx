@@ -191,3 +191,45 @@ export async function deleteOrderDetaulById(orderDetail_id) {
   );
   return response;
 }
+
+// *************
+// order
+// *************
+
+export async function createOrder(
+  name,
+  address,
+  phone,
+  payment,
+  total_price,
+  user_id
+) {
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("address", address);
+  formData.append("phone", phone);
+  formData.append("payment", payment);
+  formData.append("total_price", total_price);
+  formData.append("user_id", user_id);
+
+  const response = await api.post(`/api/order/add`, formData);
+  return response;
+}
+
+export async function getOrderByUserId(user_id) {
+  const formData = new FormData();
+  formData.append("user_id", user_id);
+
+  const response = await api.post(`/api/order/add`, formData);
+  return response;
+}
+
+export async function updateOrder() {}
+
+export async function deleteOrderById(order_id) {
+  const formData = new FormData();
+  formData.append("order_id", order_id);
+
+  const response = await api.post(`/api/order/delete`, formData);
+  return response;
+}
