@@ -144,3 +144,50 @@ export async function deleteCategoryById(category_id) {
   const response = await api.get(`/api/category/delete`, formData);
   return response;
 }
+
+// *************
+// OrderDetail
+// *************
+
+export async function createOderDetail(productIdList) {
+  const formData = new FormData();
+  formData.append("productIdList", productIdList);
+
+  const response = await api.post(`/api/orderDetail/add`, formData);
+  return response;
+}
+
+export async function getOrderDetailByOrderId(order_id) {
+  const formData = new FormData();
+  formData.append("order_id", order_id);
+
+  const response = await api.post(
+    `/api/orderDetail/getOrderDetailByOrderId`,
+    formData
+  );
+  return response;
+}
+
+export async function getOrderDetailByUserId(user_id) {
+  const formData = new FormData();
+  formData.append("user_id", user_id);
+
+  const response = await api.post(
+    `/api/orderDetail/getOrderDetailByUserId`,
+    formData
+  );
+  return response;
+}
+
+export async function updateOrderDetail() {}
+
+export async function deleteOrderDetaulById(orderDetail_id) {
+  const formData = new FormData();
+  formData.append("orderDetail_id", orderDetail_id);
+
+  const response = await api.post(
+    `/api/orderDetail/deleteOrderDetaulById`,
+    formData
+  );
+  return response;
+}
