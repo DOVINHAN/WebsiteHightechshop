@@ -22,6 +22,7 @@ export async function createProduct(
   price,
   sizes,
   colors,
+  quantity,
   category_id
 ) {
   const formData = new FormData();
@@ -30,6 +31,7 @@ export async function createProduct(
   formData.append("img", img);
   formData.append("price", price);
   formData.append("sizes", sizes);
+  formData.append("quantity", quantity);
   formData.append("colors", colors);
   formData.append("category_id", category_id);
 
@@ -102,5 +104,43 @@ export async function deleteProductById(product_id) {
   const formData = new FormData();
   formData.append("product_id", product_id);
   const response = await api.post(`/api/product/delete`, formData);
+  return response;
+}
+
+// *************
+// Category
+// *************
+
+export async function createCategory(name) {
+  const formData = new FormData();
+  formData.append("name", name);
+
+  const response = await api.post(`/api/category/add`, formData);
+  return response;
+}
+
+export async function getAllCategories() {
+  const response = await api.get(`/api/category/getAll`);
+  return response;
+}
+
+export async function getAllCategoriesByKeyword(keyword) {
+  const formData = new FormData();
+  formData.append("keyword", keyword);
+  const response = await api.get(`/api/category/getAll`, formData);
+  return response;
+}
+
+export async function updateCategory(category_id) {
+  const formData = new FormData();
+  formData.append("category_id", category_id);
+  const response = await api.get(`/api/category/getByCategoryId`, formData);
+  return response;
+}
+
+export async function deleteCategoryById(category_id) {
+  const formData = new FormData();
+  formData.append("category_id", category_id);
+  const response = await api.get(`/api/category/delete`, formData);
   return response;
 }
