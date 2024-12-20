@@ -22,33 +22,6 @@ use App\Http\Controllers\OrderDetailController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\CartController;
 
-
-
-
-    #Product Management
-    Route::prefix('product')->group(function(){
-    // Add product
-    Route::get('list',[ProductController::class, 'index']);
-    Route::get('category/{id}', [ProductController::class, 'showByCategory']);
-    Route::get('discount', [ProductController::class, 'showByDiscount']);
-    Route::post('add',[ProductController::class,'store']);
-    Route::get('detail/{id}',[ProductController::class,'show']);
-    // Update
-    Route::put('update/{id}', [ProductController::class, 'update']);
-     // Delete
-     Route::delete('delete/{id}',[ProductController::class, 'destroy']);
-});
-
-    #Image Management
-    Route::prefix('image')->group(function(){
-    // Image list
-    Route::get('list',[ImageController::class, 'index']);
-    Route::post('add',[ImageController::class, 'store']);
-    Route::get('detail/{id}',[ImageController::class, 'show']);
-    // Delete
-    Route::delete('delete/{id}',[ImageController::class, 'destroy']);
-});
-
 Route::middleware('auth')->group(function () {
         #Categories Management
         Route::prefix('categories')->group(function(){
