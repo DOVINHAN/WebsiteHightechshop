@@ -8,6 +8,19 @@ import { getDiscountProductsForHomePage } from "../../../utils/ApiFunction";
 const DiscountedProducts = () => {
   const [discountProducts, setDiscountProducts] = useState([]);
 
+  useEffect(() => {
+    getDiscountProductsForHomePage()
+     .then((response) => {
+        const data = setDiscountProducts(response.data);
+        console.log("Discounted products fetched successfully:", data);
+      })
+     .catch((error) => {
+        console.error("Error fetching discounted products:", error);
+      });
+  }, [])
+
+
+
   const generateProductUrl = (product) => {
     const removeVietnameseTones = (str) => {
       return str
