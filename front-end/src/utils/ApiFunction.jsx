@@ -40,7 +40,7 @@ export async function createProduct(
 }
 
 export async function getAllProducts(pageNo = 0, pageSize = 8) {
-  const response = await api.get(`/api/getAll/products`, {
+  const response = await api.get(`/api/product/list`, {
     params: { pageNo, pageSize },
   });
   return response.data;
@@ -92,6 +92,7 @@ export async function updateProdcut(
   formData.append("description", description);
   formData.append("img", img);
   formData.append("price", price);
+  formData.append("discount_price", discount_price);
   formData.append("sizes", sizes);
   formData.append("colors", colors);
   formData.append("product_id", product_id);
@@ -103,7 +104,7 @@ export async function updateProdcut(
 export async function deleteProductById(product_id) {
   const formData = new FormData();
   formData.append("product_id", product_id);
-  const response = await api.delete(`/api/product/delete`, formData);
+  const response = await api.delete(`/api/product/delete/{id}`, formData);
   return response;
 }
 
@@ -115,12 +116,12 @@ export async function createCategory(name) {
   const formData = new FormData();
   formData.append("name", name);
 
-  const response = await api.post(`/api/category/add`, formData);
+  const response = await api.post(`/api/categories/add`, formData);
   return response;
 }
 
 export async function getAllCategories() {
-  const response = await api.get(`/api/category/getAll`);
+  const response = await api.get(`/api/categories/list`);
   return response;
 }
 
@@ -134,14 +135,14 @@ export async function getAllCategoriesByKeyword(keyword) {
 export async function updateCategory(category_id) {
   const formData = new FormData();
   formData.append("category_id", category_id);
-  const response = await api.get(`/api/category/getByCategoryId`, formData);
+  const response = await api.get(`/api/categories/detail/{id}`, formData);
   return response;
 }
 
 export async function deleteCategoryById(category_id) {
   const formData = new FormData();
   formData.append("category_id", category_id);
-  const response = await api.delete(`/api/category/delete`, formData);
+  const response = await api.delete(`/api/categories/delete/{id}`, formData);
   return response;
 }
 

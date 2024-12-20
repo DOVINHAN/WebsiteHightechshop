@@ -22,7 +22,6 @@ class AddressController extends Controller
     // Store a newly created address in the database
     public function store(Request $request)
     {
-        // Validate the incoming data
         $validatedData = $request->validate([
             'address' => 'required',
             'phone' => 'required',

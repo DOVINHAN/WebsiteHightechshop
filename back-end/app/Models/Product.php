@@ -11,7 +11,12 @@ class Product extends Model
     protected $table = 'product';
     protected $fillable = [
         'name',
+        'sizes',
+        'colors',
+        'quantity',
         'description',
+        'price',
+        'discount_price',
         'cate_id',
         'image_id',
     ];
@@ -21,18 +26,19 @@ class Product extends Model
         return $this->belongsTo(Categories::class, 'cate_id');
     }
 
-    public function varient()
-    {
-        return $this->hasMany(Varient::class, 'product_id');
-    }
-
-    public function feedback()
-    {
-        return $this->hasMany(Feedback::class, 'product_id');
-    }
-
     public function image()
     {
-        return $this->hasMany(Image::class);
+        return $this->hasMany(Image::class, 'image_id');
+    }
+
+    public function orderDetails()
+    {
+    return $this->hasMany(OrderDetail::class, 'product_id');
+    }
+
+    public static function getDiscountedProducts()
+    {
+        return self::whereNotNull('discount_price')  // Only select products with a discount_price
+                   ->paginate(8);  // Paginate the results with 8 products per page
     }
 }

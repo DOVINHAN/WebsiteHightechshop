@@ -16,11 +16,11 @@ return [
     */
 
     'paths' => ['api/*'],
-    'allowed_methods' => ['*'],  // Cho phép tất cả các phương thức HTTP
-    'allowed_origins' => ['*'],  // Cho phép tất cả các nguồn gốc
-    'allowed_origins_patterns' => [],
-    'allowed_headers' => ['*'],  // Cho phép tất cả các headers
+    'allowed_methods' => ['*'],
+    'allowed_origins' => ['http://localhost:3000'],  // Thêm địa chỉ của ReactJS
+    'allowed_headers' => ['*'],
     'exposed_headers' => [],
     'max_age' => 0,
     'supports_credentials' => false,
+
 ];

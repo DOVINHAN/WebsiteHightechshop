@@ -17,7 +17,12 @@ class Product extends JsonResource
         return[
             'id' => $this->id,
             'name' => $this->name,
+            'sizes' => $this->sizes,
+            'colors' => $this->colors,
+            'quantity' => $this->quantity,
             'description' => $this->description,
+            'price' => $this->price,
+            'discount_price' => $this->discount_price,
             'cate_id' => $this->cate_id,
             'image_id' => $this->image_id,
             'created_at' => $this->created_at->format('d/m/Y'),

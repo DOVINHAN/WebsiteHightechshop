@@ -10,16 +10,11 @@ class Image extends Model
     protected $table = 'image';
     protected $fillable = [
         'name',
-        'path',
+        'image',
     ];
 
     public function product()
     {
-        return $this->belongsTo(Product::class);
-    }
-
-    public function varient()
-    {
-        return $this->belongsTo(Varient::class);
+        return $this->belongsTo(Product::class, 'image_id');
     }
 }

@@ -35,12 +35,17 @@ return [
     |
     */
 
-    'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
+  'guards' => [
+    'web' => [
+        'driver' => 'session', // Sử dụng session cho việc xác thực
+        'provider' => 'users', // Dùng provider để lấy dữ liệu người dùng (mặc định là `users` trong bảng `users`)
     ],
+    'api' => [
+        'driver' => 'token', // Sử dụng token cho việc xác thực (thường dùng cho API)
+        'provider' => 'users',
+    ],
+],
+
 
     /*
     |--------------------------------------------------------------------------

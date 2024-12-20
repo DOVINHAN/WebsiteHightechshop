@@ -11,7 +11,7 @@ class OrderDetail extends Model
 
     protected $fillable = [
         'order_id',
-        'varient_id',
+        'product_id',
         'quantity',
         'price'
     ];
@@ -21,8 +21,8 @@ class OrderDetail extends Model
         return $this->belongsTo(Order::class, 'order_id');
     }
 
-    public function varient()
+    public function product()
     {
-        return $this->belongsTo(Varient::class, 'varient_id');
+        return $this->belongsTo(Product::class, 'product_id');
     }
 }

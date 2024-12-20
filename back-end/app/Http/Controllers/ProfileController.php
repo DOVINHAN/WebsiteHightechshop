@@ -24,18 +24,29 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request): JsonResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // Điền thông tin người dùng với dữ liệu đã xác thực
+        $user->fill($request->validated());
+
+        // Kiểm tra nếu email có thay đổi (dirty)
+        if ($user->isDirty('email')) {
+            // Đặt giá trị email_verified_at là null nếu email bị thay đổi
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        // Lưu dữ liệu người dùng đã được cập nhật
+        $user->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        // Trả về phản hồi JSON với trạng thái cập nhật và dữ liệu người dùng đã thay đổi
+        return response()->json([
+            'status' => 'profile-updated',
+            'user' => $user,
+        ]);
     }
+
 
     /**
      * Delete the user's account.
