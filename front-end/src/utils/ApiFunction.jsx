@@ -67,16 +67,7 @@ export async function getProductsByCategory(
   return response.data;
 }
 
-export async function getProductsByCategory(
-  category_id,
-  pageNo = 0,
-  pageSize = 8
-) {
-  const response = await api.get(`/api/getByCategory/${category_id}`, {
-    params: { pageNo, pageSize },
-  });
-  return response.data;
-}
+
 
 export async function updateProdcut(
   product_id,
@@ -85,7 +76,8 @@ export async function updateProdcut(
   img,
   price,
   sizes,
-  colors
+  colors,
+  discount_price,
 ) {
   const formData = new FormData();
   formData.append("name", name);

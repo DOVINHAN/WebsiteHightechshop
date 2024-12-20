@@ -39,6 +39,6 @@ class Product extends Model
     public static function getDiscountedProducts()
     {
         return self::whereNotNull('discount_price')  // Only select products with a discount_price
-                   ->paginate(8);  // Paginate the results with 8 products per page
+                   ->paginate(4);  // Paginate the results with 8 products per page
     }
 }
