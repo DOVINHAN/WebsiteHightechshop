@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Order;
 use App\Http\Resources\Order as OrderResource;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
+
 class OrderController extends Controller
 {
     /**
@@ -15,7 +15,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $order = Order::all();
+        $order = Order::paginate(8);
         $arr = ['status' => true,
                  'message' => 'Order List',
                  'data' => OrderResource::collection($order)
@@ -80,4 +80,41 @@ class OrderController extends Controller
         ];
         return response()->json($arr);
     }
+
+    public function orderDetails($id)
+{
+    // Kiểm tra xem người dùng có đăng nhập không
+    if (!auth()->check()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Bạn cần đăng nhập để xem chi tiết đơn hàng.'
+        ], 401);
+    }
+
+    // Lấy đơn hàng theo ID
+    $order = Order::with('orderDetails.product')->find($id);
+
+    // Kiểm tra nếu không tìm thấy đơn hàng
+    if (!$order) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Đơn hàng không tồn tại.'
+        ], 404);
+    }
+
+    // Kiểm tra xem đơn hàng có thuộc về người dùng đang đăng nhập không
+    if ($order->user_id !== auth()->user()->id) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Bạn không có quyền xem đơn hàng này.'
+        ], 403);
+    }
+
+    // Trả về thông tin chi tiết đơn hàng
+    return response()->json([
+        'success' => true,
+        'order' => $order
+    ]);
+}
+
 }

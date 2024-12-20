@@ -15,7 +15,7 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $cate = Categories::all();
+        $cate = Categories::paginate(8);
         $arr = ['status' => true,
                  'message' => 'Categories List',
                  'data' => CategoriesResource::collection($cate)
@@ -37,28 +37,45 @@ class CategoriesController extends Controller
     public function store(Request $request)
     {
         $input = $request->all();
-        $validator = Validator::make($input,[
-            'name'=> 'required',
+        $validator = Validator::make($input, [
+            'name' => 'required',
         ]);
-        if($validator->fails()){
-            $arr = ['success' => false,
-                    'message' => 'Error',
-                    'data' => $validator->errors()
+
+        if ($validator->fails()) {
+            $arr = [
+                'success' => false,
+                'message' => 'Validation Error',
+                'data' => $validator->errors()
             ];
-            return response()->json($arr,200);
+            return response()->json($arr, 200);
         }
-        $cate = Categories::create($input);
-        $arr = ['status' => true,
-                'message' => 'Category added',
+
+        try {
+            // Bắt đầu tạo dữ liệu
+            $cate = Categories::create($input);
+
+            $arr = [
+                'success' => true,
+                'message' => 'Category added successfully',
                 'data' => new CategoriesResource($cate)
-        ];
-        return response()->json($arr,201);
+            ];
+            return response()->json($arr, 201);
+        } catch (\Exception $e) {
+            // Xử lý lỗi
+            $arr = [
+                'success' => false,
+                'message' => 'Something went wrong',
+                'error' => $e->getMessage() // Hiển thị lỗi cụ thể (nếu cần)
+            ];
+            return response()->json($arr, 500); // 500 là mã lỗi server
+        }
     }
+
 
     /**
      * Display the specified resource.
      */
-    public function show(Categories $cate, string $id)
+    public function show($id)
     {
         $cate = Categories::find($id);
         if(is_null($cate)){

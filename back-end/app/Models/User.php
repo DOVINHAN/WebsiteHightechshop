@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -57,12 +58,6 @@ class User extends Authenticatable
         return $this->role === 0;
     }
 
-
-
-    public function feedback()
-    {
-        return $this->hasMany(Feedback::class, 'user_id');
-    }
 
     public function order()
     {

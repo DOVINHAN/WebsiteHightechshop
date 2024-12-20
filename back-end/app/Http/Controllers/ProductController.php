@@ -17,7 +17,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $product = Product::all();
+        $product = Product::paginate(8);
         $arr = ['status' => true,
                  'message' => 'Product List',
                  'data' => ProductResource::collection($product)
@@ -40,7 +40,15 @@ class ProductController extends Controller
     {
         $input = $request->all();
         $validator = Validator::make($input,[
-            'name'=> 'required',
+            'name' => 'required',
+            'sizes' => 'nullable|strings',
+            'colors' => 'nullable|string',
+            'quantity' => 'required|integer',
+            'description' => 'nullable|string',
+            'price' => 'required',
+            'discount_price' => 'nullable|required',
+            'cate_id' => 'required|integer',
+            'image_id' => 'required|integer',
         ]);
         if($validator->fails()){
             $arr = ['success' => false,
@@ -117,7 +125,7 @@ class ProductController extends Controller
         return response()->json($arr);
     }
 
-    public function showByCategory(Product $product ,Categories $cate,  string $id)
+    public function getByCategory(Product $product ,Categories $cate,  string $id)
     {
         // Lấy danh mục với id là $categoryId
         $cate = Categories::findOrFail($id);
@@ -129,5 +137,31 @@ class ProductController extends Controller
         return response()->json([
             'categories' => $cate,
         ]);
+    }
+
+    public function search(Request $request)
+    {
+        $validated = $request->validate([
+            'keyword' => 'required|string|max:255',
+        ]);
+
+        $keyword = $validated['keyword'];
+
+        $product = Product::where('name', 'like', '%' . $keyword . '%')
+            ->orWhere('description', 'like', '%' . $keyword . '%')
+            ->orWhere('sizes', 'like', '%' . $keyword . '%')
+            ->orWhere('colors', 'like', '%' . $keyword . '%')
+            ->get();
+
+        return response()->json($product);
+    }
+
+    public function showByDiscount(Request $request)
+    {
+        // Get products with a discount and paginate 8 per page
+        $product = Product::getDiscountedProducts();
+
+        // Return the products as a JSON response
+        return response()->json($product);
     }
 }

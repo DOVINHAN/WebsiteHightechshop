@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -22,19 +23,22 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request): JsonResponse
     {
         $request->authenticate();
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return response()->json([
+            'message' => 'Login successful',
+            'user' => auth()->user(),  // Optional: Include user data if needed
+        ], 200);
     }
 
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request): JsonResponse
     {
         Auth::guard('web')->logout();
 
@@ -42,7 +46,9 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return response()->json([
+            'message' => 'Logout successful',
+        ], 200);
     }
 
 
@@ -60,7 +66,9 @@ class AuthenticatedSessionController extends Controller
                 return redirect()->route('admin.dashboard');
             }
 
-            return redirect()->route('home');
+            return response()->json([
+                'message' => 'Login Admin successful',
+            ], 200);
         }
 
         return back()->withErrors([

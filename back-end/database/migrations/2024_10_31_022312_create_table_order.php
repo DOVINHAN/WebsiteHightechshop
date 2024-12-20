@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('address');
             $table->string('phone');
-            $table->integer('payment');
-            $table->integer('total_price');
+            $table->string('payment');
+            $table->decimal('total_price');
             $table->integer('user_id');
             $table->timestamps();
         });
