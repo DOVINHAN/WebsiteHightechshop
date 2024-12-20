@@ -2,8 +2,12 @@ import Heading from "../../shared/Heading";
 import products from "../../../data/productsDummnyData";
 import Button from "../../shared/Button";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getDiscountProductsForHomePage } from "../../../utils/ApiFunction";
 
 const DiscountedProducts = () => {
+  const [discountProducts, setDiscountProducts] = useState([]);
+
   const generateProductUrl = (product) => {
     const removeVietnameseTones = (str) => {
       return str

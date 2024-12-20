@@ -78,6 +78,13 @@ export async function getProductsByCategory(
   return response.data;
 }
 
+export async function getDiscountProductsForHomePage() {
+  const response = await api.get(
+    `/api/getDiscountProductsForHomePage`
+  );
+  return response.data;
+}
+
 export async function updateProdcut(
   product_id,
   name,
