@@ -1,11 +1,27 @@
-import React from "react";
 import Heading from "../../shared/Heading";
-import products from "../../../data/productsDummnyData";
 import Dropdown from "../../shared/Dropdown";
 import Pagination from "../../shared/Pagination";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getAllProducts } from "./path/to/apiFunction";
 
 const ProductsList = () => {
+  const [products, setProducts] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await getAllProducts(1, 10); // Giả sử bạn muốn lấy page 1, pageSize 10
+        setProducts(data);
+      } catch (err) {
+        setError(err.message || "Error fetching products.");
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   const generateProductUrl = (product) => {
     const removeVietnameseTones = (str) => {
       return str
@@ -22,6 +38,10 @@ const ProductsList = () => {
 
     return `/sanpham/chitietsanpham/${productNameInUrl}/${product.id}`;
   };
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="mt-20">
@@ -50,7 +70,7 @@ const ProductsList = () => {
         {/* Product List */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {products.slice(0, 16).map((product, index) => (
-            <Link to={generateProductUrl(product)} key={product.name}>
+            <Link to={generateProductUrl(product)} key={product.id}>
               <div
                 key={product.id}
                 data-aos="fade-up"
@@ -112,3 +132,4 @@ const ProductsList = () => {
 };
 
 export default ProductsList;
+
