@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+
 const CategoriesManagement = () => {
   const [categories, setCategories] = useState([
     { id: 1, name: "Iphone" },

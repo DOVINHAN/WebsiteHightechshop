@@ -76,6 +76,11 @@ export async function getDiscountProductsForHomePage() {
   return response.data;
 }
 
+export async function getDiscountProductForHomePage() {
+  const response = await api.get(`/api/product/discount-list`);
+  return response.data;
+}
+
 export async function updateProdcut(
   product_id,
   name,
