@@ -14,7 +14,9 @@
       "id": 2,
       "name": "Product B",
       "description": "This is product B.",
-      "images": ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAB..."],
+      "images": [
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAB..."
+      ],
       "categoryId": 2
     }
   ],
@@ -42,6 +44,13 @@
       "email": "jane.smith@example.com",
       "password": "hashed_password",
       "role": "customer"
+    },
+    {
+      "id": 1735751789876,
+      "name": "demo",
+      "email": "tronk",
+      "password": "123",
+      "role": "customer"
     }
   ],
   "orderdetail": [
@@ -59,7 +68,7 @@
       "phone": "987-654-3210",
       "payment": "PayPal",
       "userId": 2,
-      "price": 200.0
+      "price": 200
     }
   ]
 }

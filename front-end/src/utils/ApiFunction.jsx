@@ -67,12 +67,8 @@ export async function getProductsByCategory(
   return response.data;
 }
 
-
-
 export async function getDiscountProductsForHomePage() {
-  const response = await api.get(
-    `/api/getDiscountProductsForHomePage`
-  );
+  const response = await api.get(`/api/getDiscountProductsForHomePage`);
   return response.data;
 }
 
@@ -89,7 +85,7 @@ export async function updateProdcut(
   price,
   sizes,
   colors,
-  discount_price,
+  discount_price
 ) {
   const formData = new FormData();
   formData.append("name", name);
@@ -253,13 +249,25 @@ export async function login(email, password) {
 }
 
 export async function register(name, email, password) {
-  const formData = new FormData();
-  formData.append("name", name);
-  formData.append("email", email);
-  formData.append("password", password);
+  try {
+    const response = await fetch("http://localhost:5000/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, email, password }),
+    });
 
-  const response = await api.post(`/api/user/register`, formData);
-  return response;
+    if (!response.ok) {
+      throw new Error("Failed to register user");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error registering user:", error);
+    return null;
+  }
 }
 
 export async function updateUser(user_id, name, password) {
