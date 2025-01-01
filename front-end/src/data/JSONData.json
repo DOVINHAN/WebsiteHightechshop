@@ -1,0 +1,65 @@
+{
+  "product": [
+    {
+      "id": 1,
+      "name": "Product A",
+      "description": "This is product A.",
+      "images": [
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAB...",
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABg..."
+      ],
+      "categoryId": 1
+    },
+    {
+      "id": 2,
+      "name": "Product B",
+      "description": "This is product B.",
+      "images": ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAB..."],
+      "categoryId": 2
+    }
+  ],
+  "category": [
+    {
+      "id": 1,
+      "name": "Electronics"
+    },
+    {
+      "id": 2,
+      "name": "Furniture"
+    }
+  ],
+  "user": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "password": "hashed_password",
+      "role": "admin"
+    },
+    {
+      "id": 2,
+      "name": "Jane Smith",
+      "email": "jane.smith@example.com",
+      "password": "hashed_password",
+      "role": "customer"
+    }
+  ],
+  "orderdetail": [
+    {
+      "id": 1,
+      "address": "123 Main Street",
+      "phone": "123-456-7890",
+      "payment": "Credit Card",
+      "userId": 2,
+      "price": 150.75
+    },
+    {
+      "id": 2,
+      "address": "456 Elm Street",
+      "phone": "987-654-3210",
+      "payment": "PayPal",
+      "userId": 2,
+      "price": 200.0
+    }
+  ]
+}
