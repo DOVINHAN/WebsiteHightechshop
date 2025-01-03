@@ -14,9 +14,7 @@
       "id": 2,
       "name": "Product B",
       "description": "This is product B.",
-      "images": [
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAB..."
-      ],
+      "images": ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAB..."],
       "categoryId": 2
     }
   ],
@@ -32,23 +30,11 @@
   ],
   "user": [
     {
-      "id": 1,
-      "name": "John Doe",
-      "email": "john.doe@example.com",
-      "password": "hashed_password",
-      "role": "admin"
-    },
-    {
-      "id": 2,
-      "name": "Jane Smith",
-      "email": "jane.smith@example.com",
-      "password": "hashed_password",
-      "role": "customer"
-    },
-    {
-      "id": 1735751789876,
-      "name": "demo",
-      "email": "tronk",
+      "id": 1735907911391,
+      "name": "Nguyễn hữu trọng",
+      "email": "trong@gmail.com",
+      "phoneNumber": "0359256696",
+      "address": "K06/tổ 11 - ấp Phước Hương",
       "password": "123",
       "role": "customer"
     }

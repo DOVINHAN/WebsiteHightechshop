@@ -1,7 +1,10 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "http://localhost:8000",
+  baseURL: "http://localhost:5000",
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 export const getHeader = () => {
@@ -240,33 +243,49 @@ export async function deleteOrderById(order_id) {
 // *************
 
 export async function login(email, password) {
-  const formData = new FormData();
-  formData.append("email", email);
-  formData.append("password", password);
+  try {
+    const response = await api.post("/login", { email, password });
 
-  const response = await api.post(`/api/user/login`, formData);
-  return response;
+    if (response.status === 200) {
+      const user = response.data.user;
+      localStorage.setItem("user", JSON.stringify(user));
+      console.log(localStorage.getItem("user"));
+      return user;
+    } else {
+      throw new Error(response.data.message || "Invalid email or password.");
+    }
+  } catch (error) {
+    console.error("Error during login:", error.message || error);
+    return null;
+  }
 }
 
-export async function register(name, email, password) {
+export async function register(name, email, phoneNumber, address, password) {
   try {
-    const response = await fetch("http://localhost:5000/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, email, password }),
+    const response = await api.post("/register", {
+      name,
+      email,
+      phoneNumber,
+      address,
+      password,
     });
-
-    if (!response.ok) {
-      throw new Error("Failed to register user");
+    if (response.status === 201) {
+      return response.data;
+    } else {
+      throw new Error(response.data.message || "Failed to register user.");
     }
-
-    const data = await response.json();
-    return data;
   } catch (error) {
-    console.error("Error registering user:", error);
+    console.error("Error registering user:", error.message || error);
     return null;
+  }
+}
+
+export async function logout() {
+  try {
+    localStorage.removeItem("user");
+    console.log("User logged out successfully.");
+  } catch (error) {
+    console.error("Error during logout:", error.message || error);
   }
 }
 

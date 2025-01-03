@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { HiMenuAlt3, HiMenuAlt1 } from "react-icons/hi";
 import Logo from "../../assets/logo.png";
 import ResponsiveMenu from "./ResponsiveMenu";
+import { logout } from "../../utils/ApiFunction";
 
 export const MenuLinks = [
   { id: 1, name: "Trang chủ", link: "/" },
@@ -37,22 +38,42 @@ const Navbar = () => {
     setDropdown1Open(!dropdown1Open);
   };
 
+  const user = localStorage.getItem("user");
+
+  const handleLogout = async () => {
+    await logout();
+    window.location.reload();
+  };
+
   return (
     <div className="bg-white/90 duration-200 relative z-40 shadow-md">
       {/* login and register button */}
       <div className="bg-black py-2">
         <div className="container text-white text-sm">
           <div className="flex justify-end gap-5">
-            <button className="border-b-2 border-transparent hover:border-white">
-              <Link to="/dangky" className="">
-                Đăng ký
-              </Link>
-            </button>
-            <button className="border-b-2 border-transparent hover:border-white">
-              <Link to="/dangnhap" className="">
-                Đăng nhập
-              </Link>
-            </button>
+            {user ? (
+              <>
+                <button
+                  onClick={handleLogout}
+                  className="border-b-2 border-transparent hover:border-white"
+                >
+                  Đăng xuất
+                </button>
+              </>
+            ) : (
+              <>
+                <button className="border-b-2 border-transparent hover:border-white">
+                  <Link to="/dangky" className="">
+                    Đăng ký
+                  </Link>
+                </button>
+                <button className="border-b-2 border-transparent hover:border-white">
+                  <Link to="/dangnhap" className="">
+                    Đăng nhập
+                  </Link>
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -165,11 +186,15 @@ const Navbar = () => {
               </button>
             </Link>
             {/* user */}
-            <Link to="/nguoidung" className="">
-              <button className="relative p-3">
-                <FaUser className="text-xl text-gray-600 " />
-              </button>
-            </Link>
+            {user ? (
+              <Link to="/nguoidung" className="">
+                <button className="relative p-3">
+                  <FaUser className="text-xl text-gray-600 " />
+                </button>
+              </Link>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       </div>

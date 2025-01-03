@@ -1,26 +1,51 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Button from "../../shared/Button";
 
 const UserProfile = () => {
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+    phoneNumber: "",
+    address: "",
+  });
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser)); // Parse JSON từ localStorage
+    }
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUser((prevUser) => ({
+      ...prevUser,
+      [name]: value, // Cập nhật giá trị của field
+    }));
+  };
+
   return (
-    <div className="w-full max-w-3xl ">
+    <div className="w-full max-w-3xl">
       <div className="text-lg font-semibold mb-4 text-primary">
         Thông tin người dùng
       </div>
-      <form className="">
+      <form>
         <div className="flex gap-4 mb-4">
           <div className="flex-1">
             <label
-              htmlFor="full_name"
+              htmlFor="name"
               className="block mb-2 text-sm font-medium text-gray-900"
             >
               Tên
             </label>
             <input
               type="text"
-              id="full_name"
+              id="name"
+              name="name"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5"
               placeholder="Tên người dùng"
+              value={user.name}
+              onChange={handleInputChange}
               required
             />
           </div>
@@ -35,8 +60,11 @@ const UserProfile = () => {
             <input
               type="text"
               id="address"
+              name="address"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5"
-              placeholder="688/91 đường Quang Trung, quận Gò Vấp"
+              placeholder="Địa chỉ"
+              value={user.address}
+              onChange={handleInputChange}
               required
             />
           </div>
@@ -45,16 +73,19 @@ const UserProfile = () => {
         <div className="flex gap-4 mb-4">
           <div className="flex-1">
             <label
-              htmlFor="phone_number"
+              htmlFor="phoneNumber"
               className="block mb-2 text-sm font-medium text-gray-900"
             >
               Số điện thoại
             </label>
             <input
               type="text"
-              id="phone_number"
+              id="phoneNumber"
+              name="phoneNumber"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5"
-              placeholder="0359256696"
+              placeholder="Số điện thoại"
+              value={user.phoneNumber}
+              onChange={handleInputChange}
               required
             />
           </div>
@@ -69,12 +100,16 @@ const UserProfile = () => {
             <input
               type="email"
               id="email"
+              name="email"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5"
-              placeholder="nguyenhuutrong11133@gmail.com"
+              placeholder="Email"
+              value={user.email}
+              onChange={handleInputChange}
               required
             />
           </div>
         </div>
+
         <div>
           <label
             htmlFor="password"
@@ -91,14 +126,14 @@ const UserProfile = () => {
           />
           <input
             type="password"
-            id="password"
+            id="passwordAgain"
             className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5"
             placeholder="Nhập mật khẩu mới"
             required
           />
           <input
             type="password"
-            id="password"
+            id="passwordAgain2"
             className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5"
             placeholder="Nhập mật khẩu mới lần nữa"
             required

@@ -9,6 +9,8 @@ const Register = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phoneNumber: "",
+    address: "",
     password: "",
   });
 
@@ -21,16 +23,13 @@ const Register = () => {
   };
 
   const handleRegister = async () => {
-    const { name, email, password } = formData;
-    console.log(name);
-    console.log(email);
-    console.log(password);
-    if (!name || !email || !password) {
+    const { name, email, phoneNumber, address, password } = formData;
+    if (!name || !email || !phoneNumber || !address || !password) {
       alert("Vui lòng điền đầy đủ thông tin!");
       return;
     }
 
-    const result = await register(name, email, password);
+    const result = await register(name, email, phoneNumber, address, password);
     if (result) {
       alert("Đăng ký thành công!");
     } else {
@@ -62,9 +61,21 @@ const Register = () => {
               onChange={handleInputChange}
             />
             <Input
-              placeholder="Email hoặc số điện thoại"
+              placeholder="Email đăng nhập"
               name="email"
               value={formData.email}
+              onChange={handleInputChange}
+            />
+            <Input
+              placeholder="Số điện thoại"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleInputChange}
+            />
+            <Input
+              placeholder="Địa chỉ"
+              name="address"
+              value={formData.address}
               onChange={handleInputChange}
             />
             <Input
