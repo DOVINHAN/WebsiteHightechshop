@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Pagination from "../../shared/Pagination";
-import { addProduct, getAllProducts } from "../../../utils/ApiFunction";
+import {
+  addProduct,
+  getAllProducts,
+  updateProduct,
+} from "../../../utils/ApiFunction";
 
 const ProductsManagement = () => {
   const [products, setProducts] = useState([]);
@@ -137,28 +141,60 @@ const ProductsManagement = () => {
     });
   };
 
-  const handleUpdateProduct = (e) => {
+  const handleUpdateProduct = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
+
     const updatedProduct = {
       ...selectedProduct,
-      name: formData.get("name"),
-      description: formData.get("description"),
-      price: parseInt(formData.get("price")),
+      name: formData.name,
+      description: formData.description,
+      price: parseInt(formData.price),
+      discountPrice: parseInt(formData.discountPrice),
+      images: formData.images.filter(
+        (image) => image !== null && image !== undefined
+      ),
+      colors: formData.colors,
+      sizes: formData.sizes,
     };
-    setProducts(
-      products.map((product) =>
-        product.id === updatedProduct.id ? updatedProduct : product
-      )
-    );
-    setUpdateProductModalOpen(false);
+
+    try {
+      console.log(updatedProduct);
+      const response = await updateProduct(selectedProduct.id, updatedProduct);
+
+      if (response.message === "Product updated successfully.") {
+        setProducts((prevProducts) =>
+          prevProducts.map((product) =>
+            product.id === updatedProduct.id ? updatedProduct : product
+          )
+        );
+        setUpdateProductModalOpen(false);
+        alert("Cập nhật sản phẩm thành công!"); // Thông báo thành công
+      } else {
+        console.error("Failed to update product:", response.message);
+        alert("Cập nhật sản phẩm thất bại. Vui lòng thử lại."); // Thông báo lỗi
+      }
+    } catch (error) {
+      console.error("Error updating product:", error);
+      alert("Cập nhật sản phẩm thất bại. Vui lòng thử lại."); // Thông báo lỗi
+    }
   };
 
-  const handleDeleteProduct = () => {
-    setProducts(
-      products.filter((product) => product.id !== selectedProduct.id)
-    );
-    setDeleteProductModalOpen(false);
+  const handleDeleteProduct = async () => {
+    try {
+      // Assuming you have an API function to delete the product
+      const response = await deleteProduct(selectedProduct.id);
+
+      if (response.message === "Product deleted successfully.") {
+        setProducts((prevProducts) =>
+          prevProducts.filter((product) => product.id !== selectedProduct.id)
+        );
+        setDeleteProductModalOpen(false);
+      } else {
+        console.error("Failed to delete product:", response.message);
+      }
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
   };
 
   return (
@@ -219,12 +255,22 @@ const ProductsManagement = () => {
                 <button
                   onClick={() => {
                     setSelectedProduct(product);
+                    setFormData({
+                      name: product.name,
+                      description: product.description,
+                      price: product.price,
+                      discountPrice: product.discountPrice,
+                      images: product.images,
+                      colors: product.colors,
+                      sizes: product.sizes,
+                    }); // Set formData with selected product details
                     setUpdateProductModalOpen(true);
                   }}
                   className="bg-blue-500 text-white px-3 py-1 rounded-md mr-2"
                 >
                   Chỉnh sửa
                 </button>
+
                 <button
                   onClick={() => {
                     setSelectedProduct(product);
@@ -433,11 +479,11 @@ const ProductsManagement = () => {
           onClick={() => setUpdateProductModalOpen(false)}
         >
           <div
-            className="relative bg-white rounded-lg shadow w-full max-w-md"
+            className="relative bg-white rounded-lg shadow w-full max-w-md max-h-[600px] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-4 border-b">
-              <h3 className="text-lg font-semibold">Cập nhật danh mục</h3>
+              <h3 className="text-lg font-semibold">Chỉnh sửa sản phẩm</h3>
             </div>
             <form onSubmit={handleUpdateProduct} className="p-4">
               <div className="mb-4">
@@ -448,10 +494,13 @@ const ProductsManagement = () => {
                   id="name"
                   name="name"
                   type="text"
+                  value={formData.name}
+                  onChange={handleInputChange}
                   className="w-full border px-3 py-2 rounded-md"
                   required
                 />
               </div>
+
               <div className="mb-4">
                 <label htmlFor="description" className="block font-medium mb-1">
                   Miêu tả
@@ -459,10 +508,13 @@ const ProductsManagement = () => {
                 <textarea
                   id="description"
                   name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
                   className="w-full border px-3 py-2 rounded-md"
                   required
                 />
               </div>
+
               <div className="mb-4">
                 <label htmlFor="price" className="block font-medium mb-1">
                   Giá
@@ -471,10 +523,114 @@ const ProductsManagement = () => {
                   id="price"
                   name="price"
                   type="number"
+                  value={formData.price}
+                  onChange={handleInputChange}
                   className="w-full border px-3 py-2 rounded-md"
                   required
                 />
               </div>
+
+              <div className="mb-4">
+                <label
+                  htmlFor="discountPrice"
+                  className="block font-medium mb-1"
+                >
+                  Giá giảm
+                </label>
+                <input
+                  id="discountPrice"
+                  name="discountPrice"
+                  type="number"
+                  value={formData.discountPrice}
+                  onChange={handleInputChange}
+                  className="w-full border px-3 py-2 rounded-md"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="images" className="block font-medium mb-1">
+                  Hình ảnh
+                </label>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="w-full"
+                />
+                <div className="flex gap-2 mt-2">
+                  {imagePreview.map((src, index) => (
+                    <img
+                      key={index}
+                      src={src}
+                      alt={`preview-${index}`}
+                      className="w-16 h-16 object-cover rounded-md"
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="colors" className="block font-medium mb-1">
+                  Màu sắc
+                </label>
+                <input
+                  type="text"
+                  value={newColor}
+                  onChange={(e) => setNewColor(e.target.value)}
+                  onKeyDown={handleColorAdd}
+                  placeholder="Nhập màu sắc và nhấn Enter"
+                  className="w-full border px-3 py-2 rounded-md"
+                />
+                <div className="flex gap-2 mt-2">
+                  {formData.colors.map((color, index) => (
+                    <div key={index} className="flex items-center gap-1">
+                      <div
+                        style={{ backgroundColor: color }}
+                        className="w-6 h-6 rounded-full"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveColor(color)}
+                        className="text-red-500 text-sm"
+                      >
+                        X
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="sizes" className="block font-medium mb-1">
+                  Kích cỡ
+                </label>
+                <input
+                  type="text"
+                  value={newSize}
+                  onChange={(e) => setNewSize(e.target.value)}
+                  onKeyDown={handleSizeAdd}
+                  placeholder="Nhập kích cỡ và nhấn Enter"
+                  className="w-full border px-3 py-2 rounded-md"
+                />
+                <div className="flex gap-2 mt-2">
+                  {formData.sizes.map((size, index) => (
+                    <div key={index} className="flex items-center gap-1">
+                      <div className="w-24 h-10 flex items-center justify-center bg-gray-200 rounded-md">
+                        {size}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveSize(size)}
+                        className="text-red-500 text-sm"
+                      >
+                        X
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <div className="flex justify-end gap-2">
                 <button
                   type="button"
@@ -485,7 +641,7 @@ const ProductsManagement = () => {
                 </button>
                 <button
                   type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md"
                 >
                   Cập nhật
                 </button>
@@ -494,6 +650,7 @@ const ProductsManagement = () => {
           </div>
         </div>
       )}
+
       {/* Delete Product */}
       {isDeleteProductModalOpen && (
         <div
@@ -501,31 +658,24 @@ const ProductsManagement = () => {
           onClick={() => setDeleteProductModalOpen(false)}
         >
           <div
-            className="relative bg-white rounded-lg shadow w-full max-w-md"
+            className="relative bg-white rounded-lg shadow w-full max-w-md p-6"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-4 border-b">
-              <h3 className="text-lg font-semibold">Xóa danh mục</h3>
-            </div>
-            <div className="p-4">
-              <p>
-                Bạn có chắc chắn muốn xóa danh mục{" "}
-                <strong>{selectedProduct?.name}</strong> không?
-              </p>
-              <div className="flex justify-end mt-4">
-                <button
-                  onClick={() => setDeleteProductModalOpen(false)}
-                  className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md mr-2 hover:bg-gray-400"
-                >
-                  Hủy
-                </button>
-                <button
-                  onClick={handleDeleteProduct}
-                  className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
-                >
-                  Xóa
-                </button>
-              </div>
+            <h3 className="text-lg font-semibold">Xóa sản phẩm</h3>
+            <p>Bạn có chắc chắn muốn xóa sản phẩm này không?</p>
+            <div className="mt-4">
+              <button
+                onClick={handleDeleteProduct}
+                className="bg-red-500 text-white px-4 py-2 rounded-md"
+              >
+                Xóa
+              </button>
+              <button
+                onClick={() => setDeleteProductModalOpen(false)}
+                className="ml-4 bg-gray-300 text-black px-4 py-2 rounded-md"
+              >
+                Hủy
+              </button>
             </div>
           </div>
         </div>

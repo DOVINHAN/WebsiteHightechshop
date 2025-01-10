@@ -125,28 +125,14 @@ export async function getExploreProductsForHomePage() {
   }
 }
 
-export async function updateProdcut(
-  product_id,
-  name,
-  description,
-  img,
-  price,
-  sizes,
-  colors,
-  discount_price
-) {
-  const formData = new FormData();
-  formData.append("name", name);
-  formData.append("description", description);
-  formData.append("img", img);
-  formData.append("price", price);
-  formData.append("discount_price", discount_price);
-  formData.append("sizes", sizes);
-  formData.append("colors", colors);
-  formData.append("product_id", product_id);
-
-  const response = await api.post(`/api/product/update`, formData);
-  return response;
+export async function updateProduct(id, updatedProduct) {
+  try {
+    const response = await api.post(`/updateProduct/${id}`, updatedProduct);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating product:", error.message || error);
+    throw error;
+  }
 }
 
 export async function deleteProductById(product_id) {

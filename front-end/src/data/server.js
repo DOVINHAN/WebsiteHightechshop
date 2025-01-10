@@ -391,6 +391,54 @@ app.post("/addProduct", (req, res) => {
   });
 });
 
+app.post("/updateProduct/:id", (req, res) => {
+  const { id } = req.params;
+  const { name, description, price, discountPrice, images, colors, sizes } =
+    req.body;
+
+  console.log("id", id);
+
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error reading data file." });
+    }
+
+    try {
+      const jsonData = JSON.parse(data);
+      const numericId = parseInt(id, 10); // Chuyển id từ chuỗi thành số
+
+      const productIndex = jsonData.product.findIndex(
+        (product) => product.id === numericId // So sánh với id là số
+      );
+
+      if (productIndex === -1) {
+        return res.status(404).json({ message: "Product not found." });
+      }
+
+      jsonData.product[productIndex] = {
+        id,
+        name,
+        description,
+        price,
+        discountPrice,
+        images,
+        colors,
+        sizes,
+      };
+
+      fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), (err) => {
+        if (err) {
+          return res.status(500).json({ message: "Error updating product." });
+        }
+
+        res.status(200).json({ message: "Product updated successfully." });
+      });
+    } catch (error) {
+      return res.status(500).json({ message: "Error parsing JSON data." });
+    }
+  });
+});
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
