@@ -71,13 +71,60 @@ export async function getProductsByCategory(
 }
 
 export async function getDiscountProductsForHomePage() {
-  const response = await api.get(`/api/getDiscountProductsForHomePage`);
-  return response.data;
+  try {
+    const response = await api.get("/discountProductsForHomePage");
+    if (response.status === 200) {
+      console.log(response.data);
+      return response.data;
+    } else {
+      throw new Error(
+        response.data.message || "Failed to fetch discounted products."
+      );
+    }
+  } catch (error) {
+    console.error(
+      "Error fetching discounted products:",
+      error.message || error
+    );
+    return [];
+  }
 }
 
-export async function getDiscountProductForHomePage() {
-  const response = await api.get(`/api/product/discount-list`);
-  return response.data;
+export async function getBestSellingProductsForHomePage() {
+  try {
+    const response = await api.get("/bestSellingProductsForHomePage");
+    if (response.status === 200) {
+      console.log(response.data);
+      return response.data;
+    } else {
+      throw new Error(
+        response.data.message || "Failed to fetch best-selling products."
+      );
+    }
+  } catch (error) {
+    console.error(
+      "Error fetching best-selling products:",
+      error.message || error
+    );
+    return [];
+  }
+}
+
+export async function getExploreProductsForHomePage() {
+  try {
+    const response = await api.get("/exploreProductsForHomePage");
+    if (response.status === 200) {
+      console.log(response.data);
+      return response.data;
+    } else {
+      throw new Error(
+        response.data.message || "Failed to fetch explore products."
+      );
+    }
+  } catch (error) {
+    console.error("Error fetching explore products:", error.message || error);
+    return [];
+  }
 }
 
 export async function updateProdcut(
@@ -123,11 +170,6 @@ export async function createCategory(name) {
   return response;
 }
 
-export async function getAllCategories() {
-  const response = await api.get(`/api/categories/list`);
-  return response;
-}
-
 export async function getAllCategoriesByKeyword(keyword) {
   const formData = new FormData();
   formData.append("keyword", keyword);
@@ -147,6 +189,20 @@ export async function deleteCategoryById(category_id) {
   formData.append("category_id", category_id);
   const response = await api.delete(`/api/categories/delete/{id}`, formData);
   return response;
+}
+
+export async function getAllCategories() {
+  try {
+    const response = await api.get("/categories");
+    if (response.status === 200) {
+      return response.data.categories;
+    } else {
+      throw new Error(response.data.message || "Failed to fetch categories.");
+    }
+  } catch (error) {
+    console.error("Error fetching categories:", error.message || error);
+    return [];
+  }
 }
 
 // *************

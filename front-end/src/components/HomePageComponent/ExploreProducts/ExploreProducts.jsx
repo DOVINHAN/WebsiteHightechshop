@@ -1,10 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Heading from "../../shared/Heading";
-import products from "../../../data/productsDummnyData";
 import Button from "../../shared/Button";
 import { Link } from "react-router-dom";
+import { getExploreProductsForHomePage } from "../../../utils/ApiFunction";
 
 const ExploreProducts = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    getExploreProductsForHomePage()
+      .then((response) => {
+        const validProducts = Array.isArray(response.data) ? response.data : [];
+        console.log("Fetched products:", validProducts);
+        setProducts(validProducts);
+      })
+      .catch((error) => {
+        console.error("Error fetching discounted products:", error);
+        setProducts([]);
+      });
+  }, []);
+
   const generateProductUrl = (product) => {
     const removeVietnameseTones = (str) => {
       return str
@@ -21,6 +36,7 @@ const ExploreProducts = () => {
 
     return `/sanpham/chitietsanpham/${productNameInUrl}/${product.id}`;
   };
+
   return (
     <div className="mt-20">
       <div className="container">
@@ -52,18 +68,29 @@ const ExploreProducts = () => {
                         {product.name}
                       </h1>
                       <div className="w-full flex items-center justify-center gap-1 flex-col md:flex-row">
-                        <span className="text-red-500 font-bold text-md md:text-lg">
-                          {new Intl.NumberFormat("vi-VN", {
-                            style: "currency",
-                            currency: "VND",
-                          }).format(product.newPrice)}
-                        </span>
-                        <span className="line-through text-gray-400 text-sm ml-2">
-                          {new Intl.NumberFormat("vi-VN", {
-                            style: "currency",
-                            currency: "VND",
-                          }).format(product.oldPrice)}
-                        </span>
+                        {product.discountPrice && product.discountPrice > 0 ? (
+                          <>
+                            <span className="text-red-500 font-bold text-md md:text-lg">
+                              {new Intl.NumberFormat("vi-VN", {
+                                style: "currency",
+                                currency: "VND",
+                              }).format(product.discountPrice)}
+                            </span>
+                            <span className="line-through text-gray-400 text-sm ml-2">
+                              {new Intl.NumberFormat("vi-VN", {
+                                style: "currency",
+                                currency: "VND",
+                              }).format(product.price)}
+                            </span>
+                          </>
+                        ) : (
+                          <span className="text-red-500 font-bold text-md md:text-lg">
+                            {new Intl.NumberFormat("vi-VN", {
+                              style: "currency",
+                              currency: "VND",
+                            }).format(product.price)}
+                          </span>
+                        )}
                       </div>
                     </div>
 

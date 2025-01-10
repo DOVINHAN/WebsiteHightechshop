@@ -90,6 +90,104 @@ app.post("/login", (req, res) => {
   });
 });
 
+// API endpoint to fetch categories
+app.get("/categories", (req, res) => {
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error reading data file." });
+    }
+
+    try {
+      const jsonData = JSON.parse(data);
+      if (!jsonData.category) {
+        return res.status(404).json({ message: "Categories not found." });
+      }
+
+      res.status(200).json({ categories: jsonData.category });
+    } catch (error) {
+      return res.status(500).json({ message: "Error parsing JSON data." });
+    }
+  });
+});
+
+// Endpoint to get all products with a discount
+app.get("/discountProductsForHomePage", (req, res) => {
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error reading data file." });
+    }
+
+    try {
+      const jsonData = JSON.parse(data);
+      if (!jsonData.product) {
+        return res.status(404).json({ message: "Products not found." });
+      }
+      const validProducts = jsonData.product.filter(
+        (product) => product.price !== null && product.price !== undefined
+      );
+
+      res.status(200).json({ data: validProducts });
+    } catch (error) {
+      return res.status(500).json({ message: "Error parsing JSON data." });
+    }
+  });
+});
+
+// Endpoint to get the top 4 best-selling products
+app.get("/bestSellingProductsForHomePage", (req, res) => {
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error reading data file." });
+    }
+
+    try {
+      const jsonData = JSON.parse(data);
+      if (!jsonData.product) {
+        return res.status(404).json({ message: "Products not found." });
+      }
+
+      const topViewedProducts = jsonData.product
+        .filter(
+          (product) => product.views !== null && product.views !== undefined
+        )
+        .sort((a, b) => b.views - a.views)
+        .slice(0, 4);
+
+      res.status(200).json({ data: topViewedProducts });
+    } catch (error) {
+      return res.status(500).json({ message: "Error parsing JSON data." });
+    }
+  });
+});
+
+// Endpoint to get 8 random products
+app.get("/exploreProductsForHomePage", (req, res) => {
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error reading data file." });
+    }
+
+    try {
+      const jsonData = JSON.parse(data);
+      if (!jsonData.product) {
+        return res.status(404).json({ message: "Products not found." });
+      }
+
+      const validProducts = jsonData.product.filter(
+        (product) => product.price !== null && product.price !== undefined
+      );
+
+      // Shuffle and take 8 random products
+      const shuffledProducts = validProducts.sort(() => 0.5 - Math.random());
+      const randomProducts = shuffledProducts.slice(0, 8);
+
+      res.status(200).json({ data: randomProducts });
+    } catch (error) {
+      return res.status(500).json({ message: "Error parsing JSON data." });
+    }
+  });
+});
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

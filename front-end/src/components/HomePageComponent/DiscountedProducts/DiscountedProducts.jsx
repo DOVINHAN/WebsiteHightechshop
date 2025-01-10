@@ -1,25 +1,24 @@
-import Heading from "../../shared/Heading";
-import products from "../../../data/productsDummnyData";
-import Button from "../../shared/Button";
-import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getDiscountProductsForHomePage } from "../../../utils/ApiFunction";
+import Button from "../../shared/Button";
+import { Link } from "react-router-dom";
+import Heading from "../../shared/Heading";
 
 const DiscountedProducts = () => {
   const [discountProducts, setDiscountProducts] = useState([]);
 
   useEffect(() => {
     getDiscountProductsForHomePage()
-     .then((response) => {
-        const data = setDiscountProducts(response.data);
-        console.log("Discounted products fetched successfully:", data);
+      .then((response) => {
+        const validProducts = Array.isArray(response.data) ? response.data : [];
+        console.log("Fetched products:", validProducts);
+        setDiscountProducts(validProducts);
       })
-     .catch((error) => {
+      .catch((error) => {
         console.error("Error fetching discounted products:", error);
+        setDiscountProducts([]);
       });
-  }, [])
-
-
+  }, []);
 
   const generateProductUrl = (product) => {
     const removeVietnameseTones = (str) => {
@@ -35,20 +34,18 @@ const DiscountedProducts = () => {
       .replace(/\s+/g, "-")
       .toLowerCase();
 
-    return `/sanpham/chitietsanpham/${productNameInUrl}/${product.id}`;
+    return `/product/detail/${productNameInUrl}/${product.id}`;
   };
 
   return (
     <div className="mt-20">
       <div className="container">
-        <Heading title={"SẢN PHẨM GIẢM GIÁ"} />
-        {/* Product List */}
+        <Heading title={"Sản phẩm giảm giá"} />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {products.slice(0, 4).map((product, index) => (
-            <Link to={generateProductUrl(product)} key={product.name}>
+          {discountProducts.slice(0, 4).map((product, index) => (
+            <Link to={generateProductUrl(product)} key={product.id}>
               <div className="w-full">
                 <div
-                  key={product.id}
                   data-aos="fade-up"
                   data-aos-delay={`${index * 200}`}
                   className="rounded-md bg-white hover:bg-black/80 hover:text-white shadow-xl duration-high group max-w-[275px] h-[350px] md:h-[400px] mb-10 md:mb-0 overflow-hidden flex flex-col mx-auto"
@@ -69,22 +66,32 @@ const DiscountedProducts = () => {
                         {product.name}
                       </h1>
                       <div className="w-full flex items-center justify-center gap-1 flex-col md:flex-row">
-                        <span className="text-red-500 font-bold text-md md:text-lg ">
-                          {new Intl.NumberFormat("vi-VN", {
-                            style: "currency",
-                            currency: "VND",
-                          }).format(product.newPrice)}
-                        </span>
-                        <span className="line-through text-gray-400 text-sm ml-2">
-                          {new Intl.NumberFormat("vi-VN", {
-                            style: "currency",
-                            currency: "VND",
-                          }).format(product.oldPrice)}
-                        </span>
+                        {product.discountPrice && product.discountPrice > 0 ? (
+                          <>
+                            <span className="text-red-500 font-bold text-md md:text-lg">
+                              {new Intl.NumberFormat("vi-VN", {
+                                style: "currency",
+                                currency: "VND",
+                              }).format(product.discountPrice)}
+                            </span>
+                            <span className="line-through text-gray-400 text-sm ml-2">
+                              {new Intl.NumberFormat("vi-VN", {
+                                style: "currency",
+                                currency: "VND",
+                              }).format(product.price)}
+                            </span>
+                          </>
+                        ) : (
+                          <span className="text-red-500 font-bold text-md md:text-lg">
+                            {new Intl.NumberFormat("vi-VN", {
+                              style: "currency",
+                              currency: "VND",
+                            }).format(product.price)}
+                          </span>
+                        )}
                       </div>
                     </div>
 
-                    {/* Description and Button */}
                     <div className="mt-auto text-center">
                       <p className="text-gray-500 group-hover:text-white duration-300 text-sm line-clamp-2 md:line-clamp-4">
                         {product.description}
@@ -99,7 +106,7 @@ const DiscountedProducts = () => {
             </Link>
           ))}
         </div>
-        {/* view all products button */}
+
         <div className="mt-10 flex justify-center">
           <Button
             bgColor="bg-primary"

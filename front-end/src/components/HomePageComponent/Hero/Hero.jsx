@@ -5,18 +5,7 @@ import img2 from "../../../assets/hero/img2.png";
 import img3 from "../../../assets/hero/img3.png";
 import img4 from "../../../assets/hero/img4.png";
 import img5 from "../../../assets/hero/img5.png";
-
-const categoryList = [
-  { id: 1, name: "Iphone", link: "/#" },
-  { id: 2, name: "Ipad", link: "/#" },
-  { id: 3, name: "Samsung", link: "/#" },
-  { id: 4, name: "Oppo", link: "/#" },
-  { id: 5, name: "Xiaomi", link: "/#" },
-  { id: 6, name: "Gaming phone", link: "/#" },
-  { id: 7, name: "Phụ kiện", link: "/#" },
-  { id: 8, name: "Đồng hồ", link: "/#" },
-  { id: 9, name: "PC", link: "/#" },
-];
+import { getAllCategories } from "../../../utils/ApiFunction";
 
 const carouselData = [
   {
@@ -54,7 +43,21 @@ const carouselData = [
 ];
 
 const Hero = () => {
+  const [categories, setCategories] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await getAllCategories();
+        setCategories(response);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -76,7 +79,7 @@ const Hero = () => {
         {/* category list */}
         <div className="hidden col-span-12 md:block md:col-span-3">
           <ul className="space-y-2">
-            {categoryList.map((data, index) => (
+            {categories.map((data, index) => (
               <li
                 key={data.id}
                 data-aos="fade-right"
