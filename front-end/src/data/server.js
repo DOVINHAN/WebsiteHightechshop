@@ -16,6 +16,10 @@ const PORT = 5000;
 app.use(bodyParser.json());
 app.use(cors());
 
+// Increase the request body size limit
+app.use(express.json({ limit: "10mb" })); // Increase the limit to 10MB
+app.use(express.urlencoded({ limit: "30mb", extended: true })); // For URL-encoded data
+
 // File path to the JSON file
 const filePath = path.join(__dirname, "data.json");
 
@@ -306,6 +310,84 @@ app.delete("/deleteUser/:userId", (req, res) => {
     } catch (error) {
       return res.status(500).json({ message: "Error parsing JSON data." });
     }
+  });
+});
+
+app.get("/getAllProducts", (req, res) => {
+  const { page = 1, pageSize = 5 } = req.query;
+  const currentPage = parseInt(page);
+  const size = parseInt(pageSize);
+
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error reading data file." });
+    }
+
+    try {
+      const jsonData = JSON.parse(data);
+
+      if (!jsonData.product) {
+        return res.status(404).json({ message: "Products not found." });
+      }
+
+      const products = jsonData.product;
+
+      const startIndex = (currentPage - 1) * size;
+      const endIndex = startIndex + size;
+      const paginatedProducts = products.slice(startIndex, endIndex);
+
+      const totalProducts = products.length;
+
+      res.status(200).json({
+        products: paginatedProducts,
+        totalProducts,
+        currentPage,
+        totalPages: Math.ceil(totalProducts / size),
+      });
+    } catch (error) {
+      return res.status(500).json({ message: "Error parsing JSON data." });
+    }
+  });
+});
+
+app.post("/addProduct", (req, res) => {
+  const { name, description, price, discountPrice, images, colors, sizes } =
+    req.body;
+  if (
+    !name ||
+    !description ||
+    !price ||
+    !colors.length ||
+    !sizes.length ||
+    !images.length
+  ) {
+    return res.status(400).json({ message: "Missing required fields." });
+  }
+
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error reading data file." });
+    }
+    let jsonData = JSON.parse(data);
+    const newProduct = {
+      id: Date.now(),
+      name,
+      description,
+      price,
+      discountPrice,
+      images,
+      colors,
+      sizes,
+    };
+    jsonData.product.push(newProduct);
+    fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), (err) => {
+      if (err) {
+        return res.status(500).json({ message: "Error writing data file." });
+      }
+      res
+        .status(201)
+        .json({ message: "Product added successfully.", newProduct });
+    });
   });
 });
 

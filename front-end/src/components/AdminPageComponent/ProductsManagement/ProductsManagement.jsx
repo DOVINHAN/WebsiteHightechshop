@@ -1,67 +1,140 @@
-import React, { useState } from "react";
-import img1 from "../../../assets/productsDummyData/ip25.jpg";
-import img2 from "../../../assets/productsDummyData/ip26.jpg";
-import img3 from "../../../assets/productsDummyData/ip27.jpg";
-import img4 from "../../../assets/productsDummyData/ip28.jpg";
-import img5 from "../../../assets/productsDummyData/ip29.jpg";
+import React, { useEffect, useState } from "react";
 import Pagination from "../../shared/Pagination";
+import { addProduct, getAllProducts } from "../../../utils/ApiFunction";
 
 const ProductsManagement = () => {
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      img: img1,
-      name: "iPhone 14",
-      description: "Điện thoại thông minh mới nhất của Apple.",
-      price: 25000000,
-    },
-    {
-      id: 2,
-      img: img2,
-      name: "Samsung Galaxy S23",
-      description: "Điện thoại flagship mạnh mẽ của Samsung.",
-      price: 22000000,
-    },
-    {
-      id: 3,
-      img: img3,
-      name: "Xiaomi Mi 13",
-      description: "Hiệu năng mạnh mẽ với giá cả phải chăng.",
-      price: 15000000,
-    },
-    {
-      id: 4,
-      img: img4,
-      name: "Oppo Find X5",
-      description: "Điện thoại camera đẹp và thiết kế hiện đại.",
-      price: 18000000,
-    },
-    {
-      id: 5,
-      img: img5,
-      name: "Vivo V27",
-      description: "Sản phẩm tầm trung với nhiều tính năng nổi bật.",
-      price: 12000000,
-    },
-  ]);
-
+  const [products, setProducts] = useState([]);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
   const [isAddProductModalOpen, setAddProductModalOpen] = useState(false);
   const [isUpdateProductModalOpen, setUpdateProductModalOpen] = useState(false);
   const [isDeleteProductModalOpen, setDeleteProductModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [colors, setColors] = useState([]); // State to store the list of colors
+  const [newColor, setNewColor] = useState(""); // State to hold the new color
+  const [newSize, setNewSize] = useState("");
 
-  const handleAddProduct = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const newProduct = {
-      id: products.length + 1,
-      img: formData.get("img"),
-      name: formData.get("name"),
-      description: formData.get("description"),
-      price: parseInt(formData.get("price")),
+  const handleColorAdd = (e) => {
+    if (e.key === "Enter" && newColor.trim()) {
+      setFormData({
+        ...formData,
+        colors: [...formData.colors, newColor.trim()],
+      });
+      setNewColor(""); // Clear input after adding
+    }
+  };
+
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    price: "",
+    discountPrice: "",
+    images: [],
+    colors: [],
+    sizes: [],
+  });
+
+  const [imagePreview, setImagePreview] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const data = await getAllProducts(currentPage, pageSize);
+      setProducts(data.products);
+      setTotalProducts(data.totalProducts);
     };
-    setProducts([...products, newProduct]);
-    setAddProductModalOpen(false);
+
+    fetchProducts();
+  }, [currentPage, pageSize]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    const filePreviews = files.map((file) => URL.createObjectURL(file));
+    setImagePreview(filePreviews); // Cập nhật ảnh preview
+
+    // Chuyển đổi các file ảnh thành base64
+    const readerPromises = files.map((file) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result); // Khi đọc xong, trả về kết quả base64
+        reader.onerror = reject; // Xử lý lỗi
+        reader.readAsDataURL(file); // Đọc file dưới dạng base64
+      });
+    });
+
+    // Lưu base64 vào formData sau khi tất cả các ảnh đã được đọc thành công
+    Promise.all(readerPromises)
+      .then((base64Images) => {
+        // Lưu các ảnh base64 vào formData
+        setFormData((prevData) => ({
+          ...prevData,
+          images: base64Images, // Cập nhật ảnh vào formData
+        }));
+      })
+      .catch((error) => {
+        console.error("Error converting images to base64:", error);
+      });
+  };
+
+  const handleAddProduct = async (e) => {
+    e.preventDefault();
+
+    // Using the current formData state directly instead of FormData from the event
+    const newProduct = {
+      name: formData.name,
+      description: formData.description,
+      price: parseInt(formData.price),
+      discountPrice: parseInt(formData.discountPrice),
+      images: formData.images.filter(
+        (image) => image !== null && image !== undefined
+      ),
+      colors: formData.colors, // Colors stored in the formData state
+      sizes: formData.sizes, // Sizes stored in the formData state
+    };
+
+    // Assuming addProduct is an API call function
+    const response = await addProduct(newProduct);
+
+    if (response.message === "Product added successfully.") {
+      setProducts([...products, response.newProduct]);
+      setAddProductModalOpen(false);
+    }
+  };
+
+  const handleSizeAdd = (e) => {
+    if (e.key === "Enter" && newSize.trim()) {
+      setFormData({
+        ...formData,
+        sizes: [...formData.sizes, newSize.trim()],
+      });
+      setNewSize(""); // Clear input after adding
+    }
+  };
+
+  const handleRemoveColor = (color) => {
+    setFormData({
+      ...formData,
+      colors: formData.colors.filter((item) => item !== color),
+    });
+  };
+
+  const handleRemoveSize = (size) => {
+    setFormData({
+      ...formData,
+      sizes: formData.sizes.filter((item) => item !== size),
+    });
   };
 
   const handleUpdateProduct = (e) => {
@@ -130,7 +203,7 @@ const ProductsManagement = () => {
             <tr key={product.id}>
               <td className="border-b border-gray-300 p-3">
                 <img
-                  src={product.img}
+                  src={product.images[0]}
                   alt={product.name}
                   className="w-16 h-16 object-cover rounded-md"
                 />
@@ -167,7 +240,11 @@ const ProductsManagement = () => {
         </tbody>
       </table>
       <div className="mt-10 flex justify-center">
-        <Pagination />
+        <Pagination
+          totalItems={totalProducts}
+          pageSize={pageSize}
+          onPageChange={handlePageChange}
+        />
       </div>
 
       {/* Add Product */}
@@ -177,7 +254,7 @@ const ProductsManagement = () => {
           onClick={() => setAddProductModalOpen(false)}
         >
           <div
-            className="relative bg-white rounded-lg shadow w-full max-w-md"
+            className="relative bg-white rounded-lg shadow w-full max-w-md max-h-[600px] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-4 border-b">
@@ -192,10 +269,13 @@ const ProductsManagement = () => {
                   id="name"
                   name="name"
                   type="text"
+                  value={formData.name}
+                  onChange={handleInputChange}
                   className="w-full border px-3 py-2 rounded-md"
                   required
                 />
               </div>
+
               <div className="mb-4">
                 <label htmlFor="description" className="block font-medium mb-1">
                   Miêu tả
@@ -203,10 +283,13 @@ const ProductsManagement = () => {
                 <textarea
                   id="description"
                   name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
                   className="w-full border px-3 py-2 rounded-md"
                   required
                 />
               </div>
+
               <div className="mb-4">
                 <label htmlFor="price" className="block font-medium mb-1">
                   Giá
@@ -215,10 +298,114 @@ const ProductsManagement = () => {
                   id="price"
                   name="price"
                   type="number"
+                  value={formData.price}
+                  onChange={handleInputChange}
                   className="w-full border px-3 py-2 rounded-md"
                   required
                 />
               </div>
+
+              <div className="mb-4">
+                <label
+                  htmlFor="discountPrice"
+                  className="block font-medium mb-1"
+                >
+                  Giá giảm
+                </label>
+                <input
+                  id="discountPrice"
+                  name="discountPrice"
+                  type="number"
+                  value={formData.discountPrice}
+                  onChange={handleInputChange}
+                  className="w-full border px-3 py-2 rounded-md"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="images" className="block font-medium mb-1">
+                  Hình ảnh
+                </label>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="w-full"
+                />
+                <div className="flex gap-2 mt-2">
+                  {imagePreview.map((src, index) => (
+                    <img
+                      key={index}
+                      src={src}
+                      alt={`preview-${index}`}
+                      className="w-16 h-16 object-cover rounded-md"
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="colors" className="block font-medium mb-1">
+                  Màu sắc
+                </label>
+                <input
+                  type="text"
+                  value={newColor}
+                  onChange={(e) => setNewColor(e.target.value)}
+                  onKeyDown={handleColorAdd}
+                  placeholder="Nhập màu sắc và nhấn Enter"
+                  className="w-full border px-3 py-2 rounded-md"
+                />
+                <div className="flex gap-2 mt-2">
+                  {formData.colors.map((color, index) => (
+                    <div key={index} className="flex items-center gap-1">
+                      <div
+                        style={{ backgroundColor: color }}
+                        className="w-6 h-6 rounded-full"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveColor(color)}
+                        className="text-red-500 text-sm"
+                      >
+                        X
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="sizes" className="block font-medium mb-1">
+                  Kích cỡ
+                </label>
+                <input
+                  type="text"
+                  value={newSize}
+                  onChange={(e) => setNewSize(e.target.value)}
+                  onKeyDown={handleSizeAdd}
+                  placeholder="Nhập kích cỡ và nhấn Enter"
+                  className="w-full border px-3 py-2 rounded-md"
+                />
+                <div className="flex gap-2 mt-2">
+                  {formData.sizes.map((size, index) => (
+                    <div key={index} className="flex items-center gap-1">
+                      <div className="w-24 h-10 flex items-center justify-center bg-gray-200 rounded-md">
+                        {size}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveSize(size)}
+                        className="text-red-500 text-sm"
+                      >
+                        X
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <div className="flex justify-end gap-2">
                 <button
                   type="button"
@@ -238,6 +425,7 @@ const ProductsManagement = () => {
           </div>
         </div>
       )}
+
       {/* Update Product */}
       {isUpdateProductModalOpen && (
         <div

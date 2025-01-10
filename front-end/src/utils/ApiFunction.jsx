@@ -19,35 +19,32 @@ export const getHeader = () => {
 // PRODUCT
 // *************
 
-export async function createProduct(
-  name,
-  description,
-  img,
-  price,
-  sizes,
-  colors,
-  quantity,
-  category_id
-) {
-  const formData = new FormData();
-  formData.append("name", name);
-  formData.append("description", description);
-  formData.append("img", img);
-  formData.append("price", price);
-  formData.append("sizes", sizes);
-  formData.append("quantity", quantity);
-  formData.append("colors", colors);
-  formData.append("category_id", category_id);
-
-  const response = await api.post(`/api/product/add`, formData);
-  return response;
+export async function addProduct(productData) {
+  try {
+    console.log(productData);
+    const response = await api.post(`/addProduct`, productData);
+    return response.data;
+  } catch (error) {
+    console.error("Error adding product:", error);
+    return { message: "Error adding product" };
+  }
 }
 
-export async function getAllProducts(pageNo = 0, pageSize = 8) {
-  const response = await api.get(`/api/product/list`, {
-    params: { pageNo, pageSize },
-  });
-  return response.data;
+export async function getAllProducts(page = 1, pageSize = 5) {
+  try {
+    const response = await api.get(
+      `/getAllProducts?page=${page}&pageSize=${pageSize}`
+    );
+    if (response.status === 200) {
+      console.log(response.data);
+      return response.data;
+    } else {
+      throw new Error(response.data.message || "Failed to fetch products.");
+    }
+  } catch (error) {
+    console.error("Error fetching products:", error.message || error);
+    return { products: [], totalProducts: 0, currentPage: 1, totalPages: 1 };
+  }
 }
 
 export async function getProductsByKeyword(keyword, pageNo = 0, pageSize = 8) {
