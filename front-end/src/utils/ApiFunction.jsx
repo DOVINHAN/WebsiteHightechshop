@@ -1,4 +1,5 @@
 import axios from "axios";
+import { use } from "react";
 
 export const api = axios.create({
   baseURL: "http://localhost:5000",
@@ -298,6 +299,24 @@ export async function deleteOrderById(order_id) {
 // user
 // *************
 
+export async function getAllUser(page = 1, pageSize = 5) {
+  try {
+    const response = await api.get(
+      `/getAllUsers?page=${page}&pageSize=${pageSize}`
+    );
+
+    if (response.status === 200) {
+      console.log(response.data);
+      return response.data;
+    } else {
+      throw new Error(response.data.message || "Failed to fetch users.");
+    }
+  } catch (error) {
+    console.error("Error fetching users:", error.message || error);
+    return { users: [], totalUsers: 0, currentPage: 1, totalPages: 1 };
+  }
+}
+
 export async function login(email, password) {
   try {
     const response = await api.post("/login", { email, password });
@@ -345,14 +364,14 @@ export async function logout() {
   }
 }
 
-export async function updateUser(user_id, name, password) {
-  const formData = new FormData();
-  formData.append("user_id", user_id);
-  formData.append("name", name);
-  formData.append("password", password);
-
-  const response = await api.post(`/api/user/update`, formData);
-  return response;
+export async function updateUser(updatedUser) {
+  try {
+    const response = await api.post(`/updateUser`, updatedUser);
+    return response;
+  } catch (error) {
+    console.error("Error updating user:", error.message || error);
+    throw error;
+  }
 }
 
 export async function getUserByUserId(user_id) {
@@ -371,10 +390,12 @@ export async function getUserByUserEmail(email) {
   return response;
 }
 
-export async function deleteUserById(user_id) {
-  const formData = new FormData();
-  formData.append("user_id", user_id);
-
-  const response = await api.delete(`/api/user/deleteUserById`, formData);
-  return response;
+export async function deleteUserById(userId) {
+  try {
+    const response = await api.delete(`/deleteUser/${userId}`);
+    return response;
+  } catch (error) {
+    console.error("Error deleting user:", error.message || error);
+    throw error;
+  }
 }

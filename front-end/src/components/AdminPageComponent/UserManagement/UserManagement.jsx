@@ -1,39 +1,87 @@
-import React, { useState } from "react";
-import { IoMdSearch } from "react-icons/io";
+import React, { useEffect, useState } from "react";
 import Pagination from "../../shared/Pagination";
+import {
+  deleteUserById,
+  getAllUser,
+  updateUser,
+} from "../../../utils/ApiFunction";
 
 const UserMangement = () => {
-  const users = [
-    { id: 1, name: "Nguyễn Văn A", contact: "nguyenvana@example.com" },
-    { id: 2, name: "Trần Thị B", contact: "tranthib@example.com" },
-    { id: 3, name: "Lê Văn C", contact: "0901234567" },
-    { id: 4, name: "Phạm Thị D", contact: "phamthid@example.com" },
-    { id: 5, name: "Đặng Văn E", contact: "0923456789" },
-  ];
+  // Các state để lưu trữ dữ liệu người dùng và phân trang
+  const [users, setUsers] = useState([]);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
 
+  // Các modal và state liên quan
   const [isAddUserModalOpen, setAddUserModalOpen] = useState(false);
   const [isUpdateUserModalOpen, setUpdateUserModalOpen] = useState(false);
   const [isDeleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  const handleUpdateUser = (e) => {
+  // Gọi API để lấy người dùng khi thay đổi trang hoặc pageSize
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const data = await getAllUser(currentPage, pageSize);
+      setUsers(data.users); // Cập nhật danh sách người dùng
+      setTotalUsers(data.totalUsers); // Cập nhật tổng số người dùng
+    };
+
+    fetchUsers();
+  }, [currentPage, pageSize]); // Gọi lại khi currentPage hoặc pageSize thay đổi
+
+  // Hàm để xử lý thay đổi trang
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  // Hàm xử lý các hành động như chỉnh sửa và xóa người dùng
+  const handleUpdateUser = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
+
     const updatedUser = {
       ...selectedUser,
       name: formData.get("name"),
-      description: formData.get("description"),
-      price: parseInt(formData.get("price")),
+      email: formData.get("email"),
+      phoneNumber: formData.get("phoneNumber"),
+      address: formData.get("address"),
+      role: formData.get("role"),
     };
-    setProUsers(
-      users.map((user) => (user.id === updatedUser.id ? updatedUser : user))
-    );
-    setUpdateUserModalOpen(false);
+
+    try {
+      const response = await updateUser(updatedUser);
+
+      if (response.status === 200) {
+        setUsers(
+          users.map((user) => (user.id === updatedUser.id ? updatedUser : user))
+        );
+        setUpdateUserModalOpen(false);
+        alert("Cập nhật người dùng thành công!");
+      } else {
+        throw new Error(response.data.message || "Update failed.");
+      }
+    } catch (error) {
+      console.error("Error updating user:", error.message || error);
+      alert("Cập nhật người dùng thất bại. Vui lòng thử lại.");
+    }
   };
 
-  const handleDeleteUser = () => {
-    setUsers(users.filter((User) => User.id !== selectedUser.id));
-    setDeleteUserModalOpen(false);
+  const handleDeleteUser = async () => {
+    try {
+      const response = await deleteUserById(selectedUser.id);
+
+      if (response.status === 200) {
+        setUsers(users.filter((user) => user.id !== selectedUser.id));
+        setDeleteUserModalOpen(false);
+        alert("Xóa người dùng thành công!");
+      } else {
+        throw new Error(response.data.message || "Delete failed.");
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error.message || error);
+      alert("Xóa người dùng thất bại. Vui lòng thử lại.");
+    }
   };
 
   return (
@@ -56,13 +104,19 @@ const UserMangement = () => {
       <table className="table-auto w-full border-collapse border-spacing-y-4 border-spacing-x-2 mt-6">
         <thead>
           <tr>
-            <th className="border-b border-gray-300 p-3 text-left w-1/3">
+            <th className="border-b border-gray-300 p-3 text-left w-1/12">
+              ID
+            </th>
+            <th className="border-b border-gray-300 p-3 text-left w-3/12">
               Tên người dùng
             </th>
-            <th className="border-b border-gray-300 p-3 text-left w-1/3">
-              Email/Số điện thoại
+            <th className="border-b border-gray-300 p-3 text-left w-2/12">
+              Email
             </th>
-            <th className="border-b border-gray-300 p-3 text-left w-1/3">
+            <th className="border-b border-gray-300 p-3 text-left w-2/12">
+              Số điện thoại
+            </th>
+            <th className="border-b border-gray-300 p-3 text-left w-4/12">
               Hành động
             </th>
           </tr>
@@ -70,8 +124,12 @@ const UserMangement = () => {
         <tbody>
           {users.map((user) => (
             <tr key={user.id}>
+              <td className="border-b border-gray-300 p-3">{user.id}</td>
               <td className="border-b border-gray-300 p-3">{user.name}</td>
-              <td className="border-b border-gray-300 p-3">{user.contact}</td>
+              <td className="border-b border-gray-300 p-3">{user.email}</td>
+              <td className="border-b border-gray-300 p-3">
+                {user.phoneNumber}
+              </td>
               <td className="border-b border-gray-300 p-3">
                 <button
                   onClick={() => {
@@ -97,8 +155,13 @@ const UserMangement = () => {
         </tbody>
       </table>
       <div className="mt-10 flex justify-center">
-        <Pagination />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={Math.ceil(totalUsers / pageSize)}
+          onPageChange={handlePageChange}
+        />
       </div>
+
       {/* Update User */}
       {isUpdateUserModalOpen && (
         <div
@@ -122,18 +185,59 @@ const UserMangement = () => {
                   name="name"
                   type="text"
                   className="w-full border px-3 py-2 rounded-md"
+                  defaultValue={selectedUser?.name}
                   required
                 />
               </div>
               <div className="mb-4">
-                <label htmlFor="loginName" className="block font-medium mb-1">
-                  Tên đăng nhập
+                <label htmlFor="email" className="block font-medium mb-1">
+                  Email
                 </label>
                 <input
-                  id="loginName"
-                  name="loginName"
+                  id="email"
+                  name="email"
                   type="text"
                   className="w-full border px-3 py-2 rounded-md"
+                  defaultValue={selectedUser?.email}
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="phoneNumber" className="block font-medium mb-1">
+                  Số điện thoại
+                </label>
+                <input
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  type="text"
+                  className="w-full border px-3 py-2 rounded-md"
+                  defaultValue={selectedUser?.phoneNumber}
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="address" className="block font-medium mb-1">
+                  Địa chỉ
+                </label>
+                <input
+                  id="address"
+                  name="address"
+                  type="text"
+                  className="w-full border px-3 py-2 rounded-md"
+                  defaultValue={selectedUser?.address}
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="role" className="block font-medium mb-1">
+                  Vai trò
+                </label>
+                <input
+                  id="role"
+                  name="role"
+                  type="text"
+                  className="w-full border px-3 py-2 rounded-md"
+                  defaultValue={selectedUser?.role}
                   required
                 />
               </div>
@@ -156,6 +260,7 @@ const UserMangement = () => {
           </div>
         </div>
       )}
+
       {/* Delete User */}
       {isDeleteUserModalOpen && (
         <div
@@ -167,11 +272,11 @@ const UserMangement = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-4 border-b">
-              <h3 className="text-lg font-semibold">Xóa danh mục</h3>
+              <h3 className="text-lg font-semibold">Xóa người dùng</h3>
             </div>
             <div className="p-4">
               <p>
-                Bạn có chắc chắn muốn xóa danh mục{" "}
+                Bạn có chắc chắn muốn xóa người dùng{" "}
                 <strong>{selectedUser?.name}</strong> không?
               </p>
               <div className="flex justify-end mt-4">

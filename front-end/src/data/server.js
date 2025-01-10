@@ -188,6 +188,127 @@ app.get("/exploreProductsForHomePage", (req, res) => {
   });
 });
 
+// Endpoint API lấy danh sách người dùng với phân trang
+app.get("/getAllUsers", (req, res) => {
+  const { page = 1, pageSize = 5 } = req.query;
+  const currentPage = parseInt(page);
+  const size = parseInt(pageSize);
+
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error reading data file." });
+    }
+
+    try {
+      const jsonData = JSON.parse(data);
+
+      if (!jsonData.user) {
+        return res.status(404).json({ message: "Users not found." });
+      }
+
+      const users = jsonData.user;
+
+      const startIndex = (currentPage - 1) * size;
+      const endIndex = startIndex + size;
+      const paginatedUsers = users.slice(startIndex, endIndex);
+
+      const totalUsers = users.length;
+
+      res.status(200).json({
+        users: paginatedUsers,
+        totalUsers,
+        currentPage,
+        totalPages: Math.ceil(totalUsers / size),
+      });
+    } catch (error) {
+      return res.status(500).json({ message: "Error parsing JSON data." });
+    }
+  });
+});
+
+// API để cập nhật người dùng
+app.post("/updateUser", (req, res) => {
+  const { id, name, email, phoneNumber, address, role } = req.body;
+
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error reading data file." });
+    }
+
+    try {
+      const jsonData = JSON.parse(data);
+      const userIndex = jsonData.user.findIndex((user) => user.id === id);
+
+      if (userIndex === -1) {
+        return res.status(404).json({ message: "User not found." });
+      }
+      jsonData.user[userIndex] = {
+        id,
+        name,
+        email,
+        phoneNumber,
+        address,
+        role,
+      };
+      fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), (err) => {
+        if (err) {
+          return res.status(500).json({ message: "Error updating user." });
+        }
+
+        res.status(200).json({ message: "User updated successfully." });
+      });
+    } catch (error) {
+      return res.status(500).json({ message: "Error parsing JSON data." });
+    }
+  });
+});
+
+app.delete("/deleteUser/:userId", (req, res) => {
+  const { userId } = req.params;
+  console.log("Deleting user with ID:", userId);
+
+  // Chuyển userId thành số (int) trước khi so sánh
+  const numericUserId = parseInt(userId, 10);
+
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error reading data file." });
+    }
+
+    try {
+      const jsonData = JSON.parse(data);
+
+      if (!jsonData.user) {
+        return res.status(404).json({ message: "Users not found." });
+      }
+
+      let users = jsonData.user;
+
+      // Tìm người dùng theo id
+      const userIndex = users.findIndex((user) => user.id === numericUserId);
+      if (userIndex !== -1) {
+        // Xóa người dùng khỏi danh sách
+        users.splice(userIndex, 1);
+
+        // Lưu lại dữ liệu vào file
+        fs.writeFile(filePath, JSON.stringify({ user: users }), (err) => {
+          if (err) {
+            return res
+              .status(500)
+              .json({ message: "Error saving updated data." });
+          }
+
+          res.status(200).json({ message: "User deleted successfully!" });
+        });
+      } else {
+        return res.status(404).json({ message: "User not found." });
+      }
+    } catch (error) {
+      return res.status(500).json({ message: "Error parsing JSON data." });
+    }
+  });
+});
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
