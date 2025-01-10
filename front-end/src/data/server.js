@@ -405,10 +405,10 @@ app.post("/updateProduct/:id", (req, res) => {
 
     try {
       const jsonData = JSON.parse(data);
-      const numericId = parseInt(id, 10); // Chuyển id từ chuỗi thành số
+      const numericId = parseInt(id, 10);
 
       const productIndex = jsonData.product.findIndex(
-        (product) => product.id === numericId // So sánh với id là số
+        (product) => product.id === numericId
       );
 
       if (productIndex === -1) {
@@ -433,6 +433,54 @@ app.post("/updateProduct/:id", (req, res) => {
 
         res.status(200).json({ message: "Product updated successfully." });
       });
+    } catch (error) {
+      return res.status(500).json({ message: "Error parsing JSON data." });
+    }
+  });
+});
+
+app.delete("/deleteProduct/:productId", (req, res) => {
+  const { productId } = req.params;
+  console.log("Deleting product with ID:", productId);
+
+  // Chuyển productId thành số (int) trước khi so sánh
+  const numericProductId = parseInt(productId, 10);
+
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error reading data file." });
+    }
+
+    try {
+      const jsonData = JSON.parse(data);
+
+      if (!jsonData.product) {
+        return res.status(404).json({ message: "Products not found." });
+      }
+
+      let products = jsonData.product;
+
+      // Tìm sản phẩm theo id
+      const productIndex = products.findIndex(
+        (product) => product.id === numericProductId
+      );
+      if (productIndex !== -1) {
+        // Xóa sản phẩm khỏi danh sách
+        products.splice(productIndex, 1);
+
+        // Lưu lại dữ liệu vào file
+        fs.writeFile(filePath, JSON.stringify({ product: products }), (err) => {
+          if (err) {
+            return res
+              .status(500)
+              .json({ message: "Error saving updated data." });
+          }
+
+          res.status(200).json({ message: "Product deleted successfully!" });
+        });
+      } else {
+        return res.status(404).json({ message: "Product not found." });
+      }
     } catch (error) {
       return res.status(500).json({ message: "Error parsing JSON data." });
     }

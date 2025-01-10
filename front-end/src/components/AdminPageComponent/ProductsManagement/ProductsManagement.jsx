@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Pagination from "../../shared/Pagination";
 import {
   addProduct,
+  deleteProductById,
   getAllProducts,
   updateProduct,
 } from "../../../utils/ApiFunction";
@@ -181,19 +182,20 @@ const ProductsManagement = () => {
 
   const handleDeleteProduct = async () => {
     try {
-      // Assuming you have an API function to delete the product
-      const response = await deleteProduct(selectedProduct.id);
+      const response = await deleteProductById(selectedProduct.id);
 
-      if (response.message === "Product deleted successfully.") {
+      if (response.status === 200) {
         setProducts((prevProducts) =>
           prevProducts.filter((product) => product.id !== selectedProduct.id)
         );
         setDeleteProductModalOpen(false);
+        alert("Xóa sản phẩm thành công!");
       } else {
-        console.error("Failed to delete product:", response.message);
+        throw new Error(response.data.message || "Delete failed.");
       }
     } catch (error) {
-      console.error("Error deleting product:", error);
+      console.error("Error deleting product:", error.message || error);
+      alert("Xóa sản phẩm thất bại. Vui lòng thử lại.");
     }
   };
 

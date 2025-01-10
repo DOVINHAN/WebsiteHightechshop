@@ -135,11 +135,14 @@ export async function updateProduct(id, updatedProduct) {
   }
 }
 
-export async function deleteProductById(product_id) {
-  const formData = new FormData();
-  formData.append("product_id", product_id);
-  const response = await api.delete(`/api/product/delete/{id}`, formData);
-  return response;
+export async function deleteProductById(productId) {
+  try {
+    const response = await api.delete(`/deleteProduct/${productId}`);
+    return response;
+  } catch (error) {
+    console.error("Error deleting product:", error.message || error);
+    throw error;
+  }
 }
 
 // *************
