@@ -7,35 +7,29 @@ import {
 } from "../../../utils/ApiFunction";
 
 const UserMangement = () => {
-  // Các state để lưu trữ dữ liệu người dùng và phân trang
   const [users, setUsers] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
 
-  // Các modal và state liên quan
-  const [isAddUserModalOpen, setAddUserModalOpen] = useState(false);
   const [isUpdateUserModalOpen, setUpdateUserModalOpen] = useState(false);
   const [isDeleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  // Gọi API để lấy người dùng khi thay đổi trang hoặc pageSize
   useEffect(() => {
     const fetchUsers = async () => {
       const data = await getAllUser(currentPage, pageSize);
-      setUsers(data.users); // Cập nhật danh sách người dùng
-      setTotalUsers(data.totalUsers); // Cập nhật tổng số người dùng
+      setUsers(data.users);
+      setTotalUsers(data.totalUsers);
     };
 
     fetchUsers();
-  }, [currentPage, pageSize]); // Gọi lại khi currentPage hoặc pageSize thay đổi
+  }, [currentPage, pageSize]);
 
-  // Hàm để xử lý thay đổi trang
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-  // Hàm xử lý các hành động như chỉnh sửa và xóa người dùng
   const handleUpdateUser = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);

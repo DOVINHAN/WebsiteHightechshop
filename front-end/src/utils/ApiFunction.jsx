@@ -149,12 +149,14 @@ export async function deleteProductById(productId) {
 // Category
 // *************
 
-export async function createCategory(name) {
-  const formData = new FormData();
-  formData.append("name", name);
-
-  const response = await api.post(`/api/categories/add`, formData);
-  return response;
+export async function addCategory(categoryData) {
+  try {
+    const response = await api.post(`/addCategory`, categoryData);
+    return response.data;
+  } catch (error) {
+    console.error("Error adding category:", error);
+    return { message: "Error adding category" };
+  }
 }
 
 export async function getAllCategoriesByKeyword(keyword) {
@@ -164,18 +166,29 @@ export async function getAllCategoriesByKeyword(keyword) {
   return response;
 }
 
-export async function updateCategory(category_id) {
-  const formData = new FormData();
-  formData.append("category_id", category_id);
-  const response = await api.get(`/api/categories/detail/{id}`, formData);
-  return response;
+export async function updateCategory(updatedCategory) {
+  try {
+    const response = await api.post("/updateCategory", updatedCategory);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating category:", error.message || error);
+    throw error;
+  }
 }
 
-export async function deleteCategoryById(category_id) {
-  const formData = new FormData();
-  formData.append("category_id", category_id);
-  const response = await api.delete(`/api/categories/delete/{id}`, formData);
-  return response;
+export async function deleteCategoryById(categoryId) {
+  try {
+    const response = await api.delete(`/deleteCategory/${categoryId}`);
+    return response;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      throw new Error(
+        error.response.data.message || "Failed to delete category."
+      );
+    } else {
+      throw new Error("Network error or server is not responding.");
+    }
+  }
 }
 
 export async function getAllCategories() {

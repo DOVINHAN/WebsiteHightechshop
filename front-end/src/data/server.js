@@ -443,7 +443,6 @@ app.delete("/deleteProduct/:productId", (req, res) => {
   const { productId } = req.params;
   console.log("Deleting product with ID:", productId);
 
-  // Chuyển productId thành số (int) trước khi so sánh
   const numericProductId = parseInt(productId, 10);
 
   fs.readFile(filePath, "utf8", (err, data) => {
@@ -480,6 +479,112 @@ app.delete("/deleteProduct/:productId", (req, res) => {
         });
       } else {
         return res.status(404).json({ message: "Product not found." });
+      }
+    } catch (error) {
+      return res.status(500).json({ message: "Error parsing JSON data." });
+    }
+  });
+});
+
+app.post("/addCategory", (req, res) => {
+  const { name } = req.body;
+  if (!name) {
+    return res.status(400).json({ message: "Category name is required." });
+  }
+
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error reading data file." });
+    }
+    let jsonData = JSON.parse(data);
+    const newCategory = { id: Date.now(), name };
+
+    if (!jsonData.category) {
+      jsonData.category = [];
+    }
+
+    jsonData.category.push(newCategory);
+
+    fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), (err) => {
+      if (err) {
+        return res.status(500).json({ message: "Error writing data file." });
+      }
+      res
+        .status(201)
+        .json({ message: "Category added successfully.", newCategory });
+    });
+  });
+});
+
+app.post("/updateCategory", (req, res) => {
+  const { id, name } = req.body;
+  console.log(id, name);
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error reading data file." });
+    }
+
+    try {
+      const jsonData = JSON.parse(data);
+      const categoryIndex = jsonData.category.findIndex(
+        (category) => category.id === parseInt(id, 10)
+      );
+
+      if (categoryIndex === -1) {
+        return res.status(404).json({ message: "Category not found." });
+      }
+
+      jsonData.category[categoryIndex] = { id, name };
+
+      fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), (err) => {
+        if (err) {
+          return res.status(500).json({ message: "Error updating category." });
+        }
+
+        res.status(200).json({ message: "Category updated successfully." });
+      });
+    } catch (error) {
+      return res.status(500).json({ message: "Error parsing JSON data." });
+    }
+  });
+});
+
+app.delete("/deleteCategory/:categoryId", (req, res) => {
+  const { categoryId } = req.params;
+
+  const numericCategoryId = parseInt(categoryId, 10);
+
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error reading data file." });
+    }
+
+    try {
+      const jsonData = JSON.parse(data);
+
+      if (!Array.isArray(jsonData.category)) {
+        return res.status(404).json({ message: "Category list not found." });
+      }
+
+      const categoryIndex = jsonData.category.findIndex(
+        (category) => category.id === numericCategoryId
+      );
+
+      if (categoryIndex !== -1) {
+        // Xóa category
+        jsonData.category.splice(categoryIndex, 1);
+
+        fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), (err) => {
+          if (err) {
+            return res
+              .status(500)
+              .json({ message: "Error saving updated data." });
+          }
+
+          res.status(200).json({ message: "Category deleted successfully!" });
+        });
+      } else {
+        return res.status(404).json({ message: "Category not found." });
       }
     } catch (error) {
       return res.status(500).json({ message: "Error parsing JSON data." });

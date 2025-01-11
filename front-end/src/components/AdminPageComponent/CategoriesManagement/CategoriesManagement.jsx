@@ -1,18 +1,26 @@
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
+import {
+  addCategory,
+  deleteCategoryById,
+  getAllCategories,
+  updateCategory,
+} from "../../../utils/ApiFunction";
 
 const CategoriesManagement = () => {
-  const [categories, setCategories] = useState([
-    { id: 1, name: "Iphone" },
-    { id: 2, name: "Ipad" },
-    { id: 3, name: "Samsung" },
-    { id: 4, name: "Oppo" },
-    { id: 5, name: "Xiaomi" },
-    { id: 6, name: "Gaming phone" },
-    { id: 7, name: "Phụ kiện" },
-    { id: 8, name: "Đồng hồ" },
-    { id: 9, name: "PC" },
-  ]);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await getAllCategories();
+        setCategories(response);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const [isAddCategoryModalOpen, setAddCategoryModalOpen] = useState(false);
   const [isUpdateCategoryModalOpen, setUpdateCategoryModalOpen] =
@@ -21,33 +29,78 @@ const CategoriesManagement = () => {
     useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const handleAddCategory = (e) => {
+  const handleAddCategory = async (e) => {
     e.preventDefault();
     const newCategoryName = e.target.name.value.trim();
     if (newCategoryName) {
-      const newCategory = { id: Date.now(), name: newCategoryName };
-      setCategories([...categories, newCategory]);
-      setAddCategoryModalOpen(false);
+      const newCategory = { name: newCategoryName };
+
+      try {
+        const response = await addCategory(newCategory);
+        if (response?.newCategory) {
+          setCategories([...categories, response.newCategory]);
+          alert("Thêm danh mục thành công!"); // Alert thông báo thành công
+        }
+        setAddCategoryModalOpen(false);
+      } catch (error) {
+        console.error("Error adding category:", error);
+        alert("Thêm danh mục thất bại!"); // Alert thông báo thất bại
+      }
+    } else {
+      alert("Vui lòng nhập tên danh mục!"); // Alert khi không nhập tên
     }
   };
 
-  const handleUpdateCategory = (e) => {
+  const handleUpdateCategory = async (e) => {
     e.preventDefault();
     const updatedName = e.target.name.value.trim();
+
     if (updatedName && selectedCategory) {
-      setCategories(
-        categories.map((cat) =>
-          cat.id === selectedCategory.id ? { ...cat, name: updatedName } : cat
-        )
-      );
-      setUpdateCategoryModalOpen(false);
+      const updatedCategory = {
+        ...selectedCategory,
+        name: updatedName,
+      };
+
+      try {
+        const response = await updateCategory(updatedCategory);
+        if (response) {
+          setCategories(
+            categories.map((cat) =>
+              cat.id === updatedCategory.id ? updatedCategory : cat
+            )
+          );
+          setUpdateCategoryModalOpen(false);
+          alert("Cập nhật danh mục thành công!");
+        } else {
+          throw new Error(response.data.message || "Update failed.");
+        }
+      } catch (error) {
+        console.error("Error updating category:", error.message || error);
+        alert("Cập nhật danh mục thất bại. Vui lòng thử lại.");
+      }
+    } else {
+      alert("Vui lòng nhập tên danh mục!");
     }
   };
 
-  const handleDeleteCategory = () => {
+  const handleDeleteCategory = async () => {
     if (selectedCategory) {
-      setCategories(categories.filter((cat) => cat.id !== selectedCategory.id));
-      setDeleteCategoryModalOpen(false);
+      try {
+        const response = await deleteCategoryById(selectedCategory.id);
+
+        if (response.status === 200) {
+          setCategories(
+            categories.filter((cat) => cat.id !== selectedCategory.id)
+          );
+          setDeleteCategoryModalOpen(false);
+          alert("Xóa danh mục thành công!");
+        } else {
+          throw new Error(response.data.message || "Delete failed.");
+        }
+      } catch (error) {
+        console.error("Error deleting category:", error.message || error);
+        alert("Xóa danh mục thất bại. Vui lòng thử lại.");
+      }
     }
   };
 
@@ -157,18 +210,26 @@ const CategoriesManagement = () => {
             </div>
             <form onSubmit={handleUpdateCategory} className="p-4">
               <div className="mb-4">
-                <label htmlFor="name" className="block text-sm font-medium">
-                  Tên danh mục mới
+                <label htmlFor="name" className="block font-medium mb-1">
+                  Tên danh mục
                 </label>
                 <input
                   id="name"
+                  name="name"
                   type="text"
+                  className="w-full border px-3 py-2 rounded-md"
                   defaultValue={selectedCategory?.name}
-                  className="w-full p-2 border rounded-md"
                   required
                 />
               </div>
-              <div className="flex justify-end">
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  className="bg-gray-300 px-4 py-2 rounded-md"
+                  onClick={() => setUpdateCategoryModalOpen(false)}
+                >
+                  Hủy
+                </button>
                 <button
                   type="submit"
                   className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
