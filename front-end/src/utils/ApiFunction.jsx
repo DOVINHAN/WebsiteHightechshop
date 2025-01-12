@@ -30,6 +30,29 @@ export async function addProduct(productData) {
   }
 }
 
+export async function getProductById(id) {
+  try {
+    const response = await api.get(`/getProductById/${id}`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error adding product:", error);
+    return { message: "Error" };
+  }
+}
+
+export async function getFourRelatedProduct(id) {
+  try {
+    console.log(id);
+    const response = await api.get(`/getFourRelatedProduct/${id}`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error adding product:", error);
+    return { message: "Error" };
+  }
+}
+
 export async function getAllProducts(page = 1, pageSize = 5) {
   try {
     const response = await api.get(

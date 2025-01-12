@@ -41,6 +41,7 @@ const App = () => {
           <Route path="/sanpham" element={<ProductsPage />} />
           <Route
             path="/sanpham/chitietsanpham/:name/:id"
+            key={location.pathname}
             element={<ProductDetailPage />}
           />
           <Route path="/vechungtoi" element={<AboutPage />} />

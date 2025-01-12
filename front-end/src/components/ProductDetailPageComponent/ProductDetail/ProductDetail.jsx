@@ -1,28 +1,42 @@
-import React, { useState } from "react";
-import { FaStar } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
 import Button from "../../shared/Button";
 import { FaCarSide } from "react-icons/fa6";
 import { GiRecycle } from "react-icons/gi";
-import products from "../../../data/productsDummnyData";
 import Relatedproducts from "../Relatedproducts/Relatedproducts";
 import { useParams } from "react-router-dom";
+import { getProductById } from "../../../utils/ApiFunction";
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const product = products.find((data) => data.id === parseInt(id));
-
-  const [selectedImage, setSelectedImage] = useState(
-    product?.images ? product.images[0] : null
-  );
-
-  const totalReviews = product.reviews.length;
-  const averageStars =
-    totalReviews > 0
-      ? product.reviews.reduce((acc, cur) => acc + cur.stars, 0) / totalReviews
-      : 0;
-
+  const numericId = Number(id);
+  const [product, setProduct] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await getProductById(numericId);
+        setProduct(response);
+        setTimeout(() => {
+          setProduct(response);
+          if (response?.images) {
+            setSelectedImage(response.images[0]);
+          }
+        }, 500);
+      } catch (err) {
+        console.error("API Error:", err);
+        alert("Không thể tải thông tin sản phẩm. Vui lòng thử lại sau.");
+      }
+    };
+
+    fetchProduct();
+  }, [numericId]);
+
+  if (!product) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="mt-20">
@@ -39,7 +53,7 @@ const ProductDetail = () => {
           <div className="flex gap-2">
             {/* Image List */}
             <div className="flex flex-col gap-4 w-1/4">
-              {product.images.map((img, index) => (
+              {product.images?.map((img, index) => (
                 <img
                   key={index}
                   src={img}
@@ -68,34 +82,13 @@ const ProductDetail = () => {
             {/* Name */}
             <h1 className="text-2xl font-bold mb-4">{product.name}</h1>
 
-            {/* Reviews and stock status */}
-            <div className="flex">
-              {/* Reviews */}
-              <div className="flex items-center gap-2 mb-4">
-                <div className="flex text-yellow-400">
-                  {[...Array(5)].map((_, index) => (
-                    <FaStar
-                      key={index}
-                      className={
-                        index < Math.round(averageStars) ? "" : "text-gray-300"
-                      }
-                    />
-                  ))}
-                </div>
-                <p className="text-gray-500">({totalReviews} đánh giá)</p>
-              </div>
-
-              {/* Stock Status */}
-              <div className="text-green-700 pl-4">Còn hàng</div>
-            </div>
-
             {/* Price */}
             <div className="flex items-center gap-4 mb-4">
               <div className="text-2xl font-bold text-primary">
-                {product.newPrice.toLocaleString("vi-VN")}₫
+                {product.discountPrice.toLocaleString("vi-VN")}₫
               </div>
               <div className="text-gray-500 line-through">
-                {product.oldPrice.toLocaleString("vi-VN")}₫
+                {product.price.toLocaleString("vi-VN")}₫
               </div>
             </div>
 

@@ -34,7 +34,7 @@ const DiscountedProducts = () => {
       .replace(/\s+/g, "-")
       .toLowerCase();
 
-    return `/product/detail/${productNameInUrl}/${product.id}`;
+    return `/sanpham/chitietsanpham/${productNameInUrl}/${product.id}`;
   };
 
   return (

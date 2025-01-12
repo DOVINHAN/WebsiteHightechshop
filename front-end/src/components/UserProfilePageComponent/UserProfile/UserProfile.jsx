@@ -12,7 +12,7 @@ const UserProfile = () => {
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      setUser(JSON.parse(storedUser)); // Parse JSON từ localStorage
+      setUser(JSON.parse(storedUser));
     }
   }, []);
 
@@ -20,7 +20,7 @@ const UserProfile = () => {
     const { name, value } = e.target;
     setUser((prevUser) => ({
       ...prevUser,
-      [name]: value, // Cập nhật giá trị của field
+      [name]: value,
     }));
   };
 

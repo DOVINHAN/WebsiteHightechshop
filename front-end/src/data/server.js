@@ -592,6 +592,74 @@ app.delete("/deleteCategory/:categoryId", (req, res) => {
   });
 });
 
+app.get("/getProductById/:id", (req, res) => {
+  const { id } = req.params;
+  const productId = parseInt(id, 10); // Chuyển đổi id thành số
+
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error reading data file." });
+    }
+
+    try {
+      const jsonData = JSON.parse(data);
+
+      if (!jsonData.product) {
+        return res.status(404).json({ message: "Products not found." });
+      }
+
+      const product = jsonData.product.find(
+        (item) => parseInt(item.id, 10) === productId
+      );
+
+      if (!product) {
+        return res.status(404).json({ message: "Product not found." });
+      }
+
+      res.status(200).json(product);
+    } catch (error) {
+      return res.status(500).json({ message: "Error parsing JSON data." });
+    }
+  });
+});
+
+app.get("/getFourRelatedProduct/:id", (req, res) => {
+  const { id } = req.params;
+  const productId = parseInt(id, 10);
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error reading data file." });
+    }
+
+    try {
+      const jsonData = JSON.parse(data);
+      const product = jsonData.product.find(
+        (item) => parseInt(item.id, 10) === productId
+      );
+
+      if (!product) {
+        return res.status(404).json({ message: "Product not found." });
+      }
+
+      const relatedProducts = jsonData.product
+        .filter(
+          (item) =>
+            item.categoryId === product.categoryId && item.id !== productId
+        )
+        .slice(0, 4);
+
+      if (relatedProducts.length === 0) {
+        return res.status(404).json({ message: "No related products found." });
+      }
+
+      res.status(200).json(relatedProducts);
+    } catch (error) {
+      console.error("Error parsing JSON data:", error);
+      return res.status(500).json({ message: "Error parsing JSON data." });
+    }
+  });
+});
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
