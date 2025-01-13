@@ -50,6 +50,7 @@ const ProductDetail = () => {
       productId: numericId,
       size: selectedSize,
       color: selectedColor,
+      quantity,
     };
 
     try {

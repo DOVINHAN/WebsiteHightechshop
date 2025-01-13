@@ -33,6 +33,12 @@ const Navbar = () => {
 
   const user = localStorage.getItem("user");
 
+  if (user) {
+    const userForGetcartItemCount = JSON.parse(user);
+    var cartItemCount = userForGetcartItemCount.cartItemCount;
+    console.log(cartItemCount);
+  }
+
   const handleLogout = async () => {
     await logout();
     window.location.reload();
@@ -137,14 +143,20 @@ const Navbar = () => {
               />
               <IoMdSearch className="text-gray-500 absolute top-1/2 right-3 -translate-y-1/2" />
             </div>
-            <Link to="/giohang">
-              <button className="relative p-3">
-                <FaCartShopping className="text-xl text-gray-600" />
-                <div className="w-4 h-4 bg-red-700 text-white rounded-full absolute top-0 right-0 flex items-center justify-center text-xs">
-                  0
-                </div>
-              </button>
-            </Link>
+            {user ? (
+              <Link to="/giohang">
+                <button className="relative p-3">
+                  <FaCartShopping className="text-xl text-gray-600" />
+                  <div className="w-4 h-4 bg-red-700 text-white rounded-full absolute top-0 right-0 flex items-center justify-center text-xs">
+                    {typeof cartItemCount === "number" && cartItemCount >= 0
+                      ? cartItemCount
+                      : 0}
+                  </div>
+                </button>
+              </Link>
+            ) : (
+              <></>
+            )}
             {user && (
               <Link to="/nguoidung">
                 <button className="p-3">

@@ -70,6 +70,7 @@ app.post("/login", (req, res) => {
     }
 
     const jsonData = JSON.parse(data);
+
     const user = jsonData.user.find(
       (u) => u.email === email && u.password === password
     );
@@ -80,6 +81,13 @@ app.post("/login", (req, res) => {
         .json({ message: "Mật khẩu tài khoản không hợp lệ." });
     }
 
+    const userCart = jsonData.cart.find((c) => c.userId === user.id);
+
+    const cartItemCount =
+      userCart && Array.isArray(userCart.productList)
+        ? userCart.productList.length
+        : 0;
+
     res.status(200).json({
       message: "Đăng nhập thành công!",
       user: {
@@ -89,6 +97,7 @@ app.post("/login", (req, res) => {
         phoneNumber: user.phoneNumber,
         address: user.address,
         role: user.role,
+        cartItemCount,
       },
     });
   });
@@ -661,9 +670,9 @@ app.get("/getFourRelatedProduct/:id", (req, res) => {
 });
 
 app.post("/addProdcutIntoCart", (req, res) => {
-  const { userId, productId, size, color } = req.body;
+  const { userId, productId, size, color, quantity } = req.body;
 
-  if (!userId || !productId || !size || !color) {
+  if (!userId || !productId || !size || !color || !quantity) {
     return res.status(400).json({ message: "Thiếu thông tin cần thiết." });
   }
 
@@ -685,8 +694,21 @@ app.post("/addProdcutIntoCart", (req, res) => {
       jsonData.cart.push(userCart);
     }
 
-    // Thêm sản phẩm vào giỏ hàng
-    userCart.productList.push({ productId, size, color });
+    // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
+    let productInCart = userCart.productList.find(
+      (item) =>
+        item.productId === productId &&
+        item.size === size &&
+        item.color === color
+    );
+
+    if (productInCart) {
+      // Nếu sản phẩm đã có, cộng thêm số lượng
+      productInCart.quantity += quantity;
+    } else {
+      // Nếu sản phẩm chưa có, thêm mới
+      userCart.productList.push({ productId, size, color, quantity });
+    }
 
     fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), (err) => {
       if (err) {
@@ -697,6 +719,38 @@ app.post("/addProdcutIntoCart", (req, res) => {
         userCart,
       });
     });
+  });
+});
+
+app.get("/getProductInCartByUserId/:id", (req, res) => {
+  const { id } = req.params;
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error reading data file." });
+    }
+
+    try {
+      const jsonData = JSON.parse(data);
+      const userCart = jsonData.cart.find((cart) => cart.userId == id);
+
+      if (!userCart) {
+        return res
+          .status(404)
+          .json({ message: "Cart not found for this user." });
+      }
+
+      const products = jsonData.product.filter((product) =>
+        userCart.productList.some((item) => item.productId == product.id)
+      );
+
+      res.status(200).json({
+        products,
+        productList: userCart.productList,
+      });
+    } catch (error) {
+      console.error("Error parsing JSON data:", error);
+      return res.status(500).json({ message: "Error parsing JSON data." });
+    }
   });
 });
 

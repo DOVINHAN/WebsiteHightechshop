@@ -41,6 +41,17 @@ export async function getProductById(id) {
   }
 }
 
+export async function getProductInCartByUserId(id) {
+  try {
+    const response = await api.get(`/getProductInCartByUserId/${id}`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error adding product:", error);
+    return { message: "Error" };
+  }
+}
+
 export async function addProdcutIntoCart(cartItem) {
   try {
     console.log(cartItem);
