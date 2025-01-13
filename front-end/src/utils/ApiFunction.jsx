@@ -254,11 +254,8 @@ export async function getAllCategories() {
 // OrderDetail
 // *************
 
-export async function createOderDetail(productIdList) {
-  const formData = new FormData();
-  formData.append("productIdList", productIdList);
-
-  const response = await api.post(`/api/orderDetail/add`, formData);
+export async function addorderdetail(orderData) {
+  const response = await api.post(`/addorderdetail`, orderData);
   return response;
 }
 

@@ -14,8 +14,6 @@ const Cart = () => {
     const fetchCartProducts = async () => {
       try {
         const cartData = await getProductInCartByUserId(userId);
-
-        // Tích hợp chi tiết sản phẩm với dữ liệu từ giỏ hàng
         const mergedProducts = cartData.productList.map((item) => {
           const productDetails = cartData.products.find(
             (product) => product.id === item.productId

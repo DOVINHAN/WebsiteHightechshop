@@ -754,6 +754,53 @@ app.get("/getProductInCartByUserId/:id", (req, res) => {
   });
 });
 
+app.post("/addorderdetail", (req, res) => {
+  const { userId, fullName, address, phoneNumber, email, products } = req.body;
+
+  if (!userId || !fullName || !address || !phoneNumber || !email || !products) {
+    return res.status(400).json({ message: "Thiếu thông tin đặt hàng." });
+  }
+
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Lỗi đọc file dữ liệu." });
+    }
+
+    const jsonData = JSON.parse(data || "{}");
+    if (!jsonData.orders) {
+      jsonData.orders = [];
+    }
+
+    const newOrder = {
+      id: Date.now(),
+      userId,
+      fullName,
+      address,
+      phoneNumber,
+      email,
+      products,
+      createdAt: new Date().toISOString(),
+    };
+
+    // Thêm đơn hàng vào danh sách orders
+    jsonData.orders.push(newOrder);
+
+    // Xóa cart của userId
+    if (jsonData.cart) {
+      jsonData.cart = jsonData.cart.filter((cart) => cart.userId !== userId);
+    }
+
+    fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), (err) => {
+      if (err) {
+        return res.status(500).json({ message: "Lỗi ghi file dữ liệu." });
+      }
+      res
+        .status(201)
+        .json({ message: "Đặt hàng thành công.", order: newOrder });
+    });
+  });
+});
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

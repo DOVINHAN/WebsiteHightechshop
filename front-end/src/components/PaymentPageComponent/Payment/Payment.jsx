@@ -1,8 +1,85 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../../shared/Button";
-import products from "../../../data/productsDummnyData";
+import {
+  addorderdetail,
+  getProductInCartByUserId,
+} from "../../../utils/ApiFunction";
 
 const Payment = () => {
+  const user = localStorage.getItem("user");
+  const jsonUser = JSON.parse(user);
+  const userId = jsonUser.id;
+
+  const [cartProducts, setCartProducts] = useState([]);
+
+  const handlePayment = async () => {
+    const fullName = document.getElementById("full_name").value;
+    const address = document.getElementById("address").value;
+    const phoneNumber = document.getElementById("phone_number").value;
+    const email = document.getElementById("email").value;
+
+    if (!fullName || !address || !phoneNumber || !email) {
+      alert("Vui lòng điền đầy đủ thông tin.");
+      return;
+    }
+
+    const orderData = {
+      userId,
+      fullName,
+      address,
+      phoneNumber,
+      email,
+      products: cartProducts.map((product) => ({
+        productId: product.id,
+        name: product.name,
+        size: product.selectedSize,
+        color: product.selectedColor,
+        quantity: product.quantity,
+        price: product.price,
+        discountPrice: product.discountPrice,
+      })),
+    };
+
+    try {
+      const response = await addorderdetail(orderData);
+      if (response.status === 201) {
+        alert("Đặt hàng thành công!");
+      } else {
+        alert("Đã xảy ra lỗi khi đặt hàng.");
+      }
+    } catch (error) {
+      console.error("Lỗi:", error);
+      alert("Đã xảy ra lỗi khi đặt hàng.");
+    }
+  };
+
+  useEffect(() => {
+    const fetchCartProducts = async () => {
+      try {
+        const cartData = await getProductInCartByUserId(userId);
+        const mergedProducts = cartData.productList.map((item) => {
+          const productDetails = cartData.products.find(
+            (product) => product.id === item.productId
+          );
+
+          return {
+            ...productDetails,
+            selectedSize: item.size,
+            selectedColor: item.color,
+            quantity: item.quantity,
+          };
+        });
+
+        setCartProducts(mergedProducts);
+        console.log(mergedProducts);
+      } catch (error) {
+        console.error("Error fetching cart products:", error);
+      }
+    };
+
+    fetchCartProducts();
+  }, [userId]);
+
   return (
     <div className="mt-20">
       <div className="container px-36">
@@ -106,21 +183,21 @@ const Payment = () => {
             <div className="text-lg font-semibold mb-4">Danh sách hóa đơn</div>
             {/* Product List */}
             <div className="space-y-0">
-              {products.map((product) => (
+              {cartProducts.map((product) => (
                 <div
                   key={product.id}
                   className="flex justify-between items-center border-b border-gray-300 py-3"
                 >
                   <div className="flex items-center gap-6">
                     <img
-                      src={product.images[0]}
+                      src={product.images?.[0]}
                       alt={product.name}
                       className="w-14 h-14 object-cover rounded"
                     />
                     <span>{product.name}</span>
                   </div>
                   <div className="text-right">
-                    {product.newPrice.toLocaleString()} đ
+                    {product.price.toLocaleString()} đ
                   </div>
                 </div>
               ))}
@@ -131,28 +208,44 @@ const Payment = () => {
               <div className="flex justify-between items-center border-b border-gray-300 py-3">
                 <div>Tổng:</div>
                 <div>
-                  {products
-                    .reduce((acc, product) => acc + product.newPrice, 0)
+                  {cartProducts
+                    .reduce(
+                      (acc, product) =>
+                        acc +
+                        (product.discountPrice !== null
+                          ? product.discountPrice
+                          : product.price),
+                      0
+                    )
                     .toLocaleString()}{" "}
                   đ
                 </div>
               </div>
+
               <div className="flex justify-between items-center border-b border-gray-300 py-3">
                 <div>Phí ship:</div>
                 <div>Miễn phí</div>
               </div>
+
               <div className="flex justify-between items-center py-3">
                 <div>Tổng thanh toán:</div>
                 <div>
-                  {products
-                    .reduce((acc, product) => acc + product.newPrice, 0)
+                  {cartProducts
+                    .reduce(
+                      (acc, product) =>
+                        acc +
+                        (product.discountPrice !== null
+                          ? product.discountPrice
+                          : product.price),
+                      0
+                    )
                     .toLocaleString()}{" "}
                   đ
                 </div>
               </div>
             </div>
             {/* payment selection */}
-            <div className="flex flex-col mt-3">
+            {/* <div className="flex flex-col mt-3">
               <div className="flex items-center ">
                 <input
                   type="radio"
@@ -184,7 +277,7 @@ const Payment = () => {
                   Thanh toán bằng tiền mặt
                 </label>
               </div>
-            </div>
+            </div> */}
 
             {/* Payment Option */}
             <div className="mt-8 ">
@@ -192,6 +285,7 @@ const Payment = () => {
                 bgColor="bg-primary"
                 text={"Đặt hàng"}
                 textColor={"text-white"}
+                onClick={handlePayment}
               />
             </div>
           </div>
