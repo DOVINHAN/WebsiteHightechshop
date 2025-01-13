@@ -4,7 +4,7 @@ import { FaCarSide } from "react-icons/fa6";
 import { GiRecycle } from "react-icons/gi";
 import Relatedproducts from "../Relatedproducts/Relatedproducts";
 import { useParams } from "react-router-dom";
-import { getProductById } from "../../../utils/ApiFunction";
+import { addProdcutIntoCart, getProductById } from "../../../utils/ApiFunction";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -13,6 +13,10 @@ const ProductDetail = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
+
+  const storedUser = localStorage.getItem("user");
+  const user = JSON.parse(storedUser);
+  const userId = user.id;
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -33,6 +37,29 @@ const ProductDetail = () => {
 
     fetchProduct();
   }, [numericId]);
+
+  const handleAddToCart = async () => {
+    if (!selectedSize || !product.colors.length) {
+      alert("Vui lòng chọn kích cỡ và màu sắc.");
+      return;
+    }
+
+    const selectedColor = product.colors[0];
+    const cartItem = {
+      userId,
+      productId: numericId,
+      size: selectedSize,
+      color: selectedColor,
+    };
+
+    try {
+      const response = await addProdcutIntoCart(cartItem);
+      alert(response.message || "Sản phẩm đã được thêm vào giỏ hàng.");
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+      alert("Không thể thêm vào giỏ hàng.");
+    }
+  };
 
   if (!product) {
     return <div>Loading...</div>;
@@ -161,6 +188,7 @@ const ProductDetail = () => {
                 bgColor="bg-primary"
                 text={"Thêm vào giỏ hàng"}
                 textColor={"text-white"}
+                onClick={handleAddToCart}
               />
             </div>
 

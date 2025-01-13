@@ -41,6 +41,17 @@ export async function getProductById(id) {
   }
 }
 
+export async function addProdcutIntoCart(cartItem) {
+  try {
+    console.log(cartItem);
+    const response = await api.post(`/addProdcutIntoCart`, cartItem);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    return { message: "Error adding product to cart." };
+  }
+}
+
 export async function getFourRelatedProduct(id) {
   try {
     console.log(id);

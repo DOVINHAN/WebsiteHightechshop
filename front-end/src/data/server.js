@@ -660,6 +660,46 @@ app.get("/getFourRelatedProduct/:id", (req, res) => {
   });
 });
 
+app.post("/addProdcutIntoCart", (req, res) => {
+  const { userId, productId, size, color } = req.body;
+
+  if (!userId || !productId || !size || !color) {
+    return res.status(400).json({ message: "Thiếu thông tin cần thiết." });
+  }
+
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Lỗi đọc file dữ liệu." });
+    }
+
+    let jsonData = JSON.parse(data || "{}");
+    if (!jsonData.cart) {
+      jsonData.cart = [];
+    }
+
+    // Kiểm tra giỏ hàng của userId
+    let userCart = jsonData.cart.find((cart) => cart.userId === userId);
+
+    if (!userCart) {
+      userCart = { id: Date.now(), userId, productList: [] };
+      jsonData.cart.push(userCart);
+    }
+
+    // Thêm sản phẩm vào giỏ hàng
+    userCart.productList.push({ productId, size, color });
+
+    fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), (err) => {
+      if (err) {
+        return res.status(500).json({ message: "Lỗi ghi file dữ liệu." });
+      }
+      res.status(201).json({
+        message: "Sản phẩm đã được thêm vào giỏ hàng.",
+        userCart,
+      });
+    });
+  });
+});
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
