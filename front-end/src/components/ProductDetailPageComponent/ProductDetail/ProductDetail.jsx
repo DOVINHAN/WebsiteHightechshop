@@ -84,12 +84,20 @@ const ProductDetail = () => {
 
             {/* Price */}
             <div className="flex items-center gap-4 mb-4">
-              <div className="text-2xl font-bold text-primary">
-                {product.discountPrice.toLocaleString("vi-VN")}₫
-              </div>
-              <div className="text-gray-500 line-through">
-                {product.price.toLocaleString("vi-VN")}₫
-              </div>
+              {product.discountPrice !== null ? (
+                <>
+                  <div className="text-2xl font-bold text-primary">
+                    {product.discountPrice.toLocaleString("vi-VN")}₫
+                  </div>
+                  <div className="text-gray-500 line-through">
+                    {product.price.toLocaleString("vi-VN")}₫
+                  </div>
+                </>
+              ) : (
+                <div className="text-2xl font-bold text-primary">
+                  {product.price.toLocaleString("vi-VN")}₫
+                </div>
+              )}
             </div>
 
             {/* Description */}
