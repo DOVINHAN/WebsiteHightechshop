@@ -793,6 +793,43 @@ app.post("/addorderdetail", (req, res) => {
   });
 });
 
+app.get("/getAllOrdersDetail", (req, res) => {
+  const { page = 1, pageSize = 5 } = req.query;
+  const currentPage = parseInt(page);
+  const size = parseInt(pageSize);
+
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error reading data file." });
+    }
+
+    try {
+      const jsonData = JSON.parse(data);
+
+      if (!jsonData.orders) {
+        return res.status(404).json({ message: "Orders not found." });
+      }
+
+      const orders = jsonData.orders;
+
+      const startIndex = (currentPage - 1) * size;
+      const endIndex = startIndex + size;
+      const paginatedOrders = orders.slice(startIndex, endIndex);
+
+      const totalOrders = orders.length;
+
+      res.status(200).json({
+        orders: paginatedOrders,
+        totalOrders,
+        currentPage,
+        totalPages: Math.ceil(totalOrders / size),
+      });
+    } catch (error) {
+      return res.status(500).json({ message: "Error parsing JSON data." });
+    }
+  });
+});
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

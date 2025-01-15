@@ -259,6 +259,18 @@ export async function addorderdetail(orderData) {
   return response;
 }
 
+export async function getAllOrdersDetail(page, pageSize) {
+  const response = await api.get(
+    `/getAllOrdersDetail?page=${page}&pageSize=${pageSize}`
+  );
+  return response.data;
+}
+
+export async function getAllOrdersDetailByUserId(userId) {
+  const response = await api.get(`/getAllOrdersDetailByUserId/${userId}`);
+  return response;
+}
+
 export async function getOrderDetailByOrderId(order_id) {
   const formData = new FormData();
   formData.append("order_id", order_id);
