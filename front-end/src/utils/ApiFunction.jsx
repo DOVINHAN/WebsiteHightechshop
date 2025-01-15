@@ -268,7 +268,7 @@ export async function getAllOrdersDetail(page, pageSize) {
 
 export async function getAllOrdersDetailByUserId(userId) {
   const response = await api.get(`/getAllOrdersDetailByUserId/${userId}`);
-  return response;
+  return response.data;
 }
 
 export async function getOrderDetailByOrderId(order_id) {

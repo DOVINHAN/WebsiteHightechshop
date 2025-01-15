@@ -830,6 +830,53 @@ app.get("/getAllOrdersDetail", (req, res) => {
   });
 });
 
+app.get("/getAllOrdersDetailByUserId/:userId", (req, res) => {
+  const userId = req.params.userId;
+  const { page = 1, pageSize = 5 } = req.query;
+  const currentPage = parseInt(page);
+  const size = parseInt(pageSize);
+
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error reading data file." });
+    }
+
+    try {
+      const jsonData = JSON.parse(data);
+
+      if (!jsonData.orders) {
+        return res.status(404).json({ message: "Orders not found." });
+      }
+
+      // Lọc đơn hàng theo userId
+      const userOrders = jsonData.orders.filter(
+        (order) => parseInt(order.userId) === parseInt(userId)
+      );
+
+      if (!userOrders.length) {
+        return res
+          .status(404)
+          .json({ message: "No orders found for this user." });
+      }
+
+      const startIndex = (currentPage - 1) * size;
+      const endIndex = startIndex + size;
+      const paginatedOrders = userOrders.slice(startIndex, endIndex);
+
+      const totalOrders = userOrders.length;
+
+      res.status(200).json({
+        orders: paginatedOrders,
+        totalOrders,
+        currentPage,
+        totalPages: Math.ceil(totalOrders / size),
+      });
+    } catch (error) {
+      return res.status(500).json({ message: "Error parsing JSON data." });
+    }
+  });
+});
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
