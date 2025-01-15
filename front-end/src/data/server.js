@@ -23,7 +23,6 @@ app.use(express.urlencoded({ limit: "30mb", extended: true })); // For URL-encod
 // File path to the JSON file
 const filePath = path.join(__dirname, "data.json");
 
-// API endpoint to register user
 app.post("/register", (req, res) => {
   const { name, email, phoneNumber, address, password } = req.body;
   console.log(phoneNumber);
@@ -57,7 +56,6 @@ app.post("/register", (req, res) => {
   });
 });
 
-// API endpoint to login user
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -103,7 +101,6 @@ app.post("/login", (req, res) => {
   });
 });
 
-// API endpoint to fetch categories
 app.get("/categories", (req, res) => {
   fs.readFile(filePath, "utf8", (err, data) => {
     if (err) {
@@ -123,7 +120,6 @@ app.get("/categories", (req, res) => {
   });
 });
 
-// Endpoint to get all products with a discount
 app.get("/discountProductsForHomePage", (req, res) => {
   fs.readFile(filePath, "utf8", (err, data) => {
     if (err) {
@@ -146,7 +142,6 @@ app.get("/discountProductsForHomePage", (req, res) => {
   });
 });
 
-// Endpoint to get the top 4 best-selling products
 app.get("/bestSellingProductsForHomePage", (req, res) => {
   fs.readFile(filePath, "utf8", (err, data) => {
     if (err) {
@@ -173,7 +168,6 @@ app.get("/bestSellingProductsForHomePage", (req, res) => {
   });
 });
 
-// Endpoint to get 8 random products
 app.get("/exploreProductsForHomePage", (req, res) => {
   fs.readFile(filePath, "utf8", (err, data) => {
     if (err) {
@@ -201,7 +195,6 @@ app.get("/exploreProductsForHomePage", (req, res) => {
   });
 });
 
-// Endpoint API lấy danh sách người dùng với phân trang
 app.get("/getAllUsers", (req, res) => {
   const { page = 1, pageSize = 5 } = req.query;
   const currentPage = parseInt(page);
@@ -239,7 +232,6 @@ app.get("/getAllUsers", (req, res) => {
   });
 });
 
-// API để cập nhật người dùng
 app.post("/updateUser", (req, res) => {
   const { id, name, email, phoneNumber, address, role } = req.body;
 

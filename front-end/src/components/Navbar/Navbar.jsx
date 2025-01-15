@@ -34,9 +34,10 @@ const Navbar = () => {
   const user = localStorage.getItem("user");
 
   if (user) {
-    const userForGetcartItemCount = JSON.parse(user);
-    var cartItemCount = userForGetcartItemCount.cartItemCount;
-    console.log(cartItemCount);
+    const userDetail = JSON.parse(user);
+    var cartItemCount = userDetail.cartItemCount;
+    var userPermission = userDetail.role;
+    console.log(userPermission);
   }
 
   const handleLogout = async () => {
@@ -102,6 +103,16 @@ const Navbar = () => {
                     </a>
                   </li>
                 ))}
+
+                {userPermission === "admin" && (
+                  <Link to="/admin">
+                    <li>
+                      <a className="px-4 font-semibold text-black hover:text-black">
+                        Admin
+                      </a>
+                    </li>
+                  </Link>
+                )}
 
                 {/* Danh mục */}
                 <li

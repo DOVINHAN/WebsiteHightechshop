@@ -15,8 +15,10 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
 
   const storedUser = localStorage.getItem("user");
-  const user = JSON.parse(storedUser);
-  const userId = user.id;
+  if (storedUser) {
+    const user = JSON.parse(storedUser);
+    var userId = user.id;
+  }
 
   useEffect(() => {
     const fetchProduct = async () => {
